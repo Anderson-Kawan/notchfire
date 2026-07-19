@@ -1,0 +1,528 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Checklist - {{ tipo_equipamento.nome }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/checklist.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="checklist-container">
+    <!-- Cabeçalho -->
+    <div class="checklist-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-clipboard-list"></i> Checklist - {{ tipo_equipamento.nome }}</h1>
+            <p>Gerencie os itens de verificação para este tipo de equipamento</p>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" onclick="abrirModalCriarItem()">
+                <i class="fa-solid fa-plus"></i> Criar Pergunta
+            </button>
+        </div>
+    </div>
+
+    <!-- Informações do Tipo Equipamento -->
+    <div class="info-card">
+        <div class="info-row">
+            <span class="info-label">Grupo:</span>
+            <span class="info-value">{{ tipo_equipamento.grupo.nome }}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Periodicidade:</span>
+            <span class="info-value">{{ tipo_equipamento.periodicidade.nome|default:"Não definida" }}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Total de Itens:</span>
+            <span class="info-value">{{ itens.count }}</span>
+        </div>
+    </div>
+
+    <!-- Lista de Itens do Checklist -->
+    <div class="checklist-items">
+        {% for item in itens %}
+        <div class="checklist-item" data-id="{{ item.id }}">
+            <div class="item-header">
+                <div class="item-number">{{ forloop.counter }}</div>
+                <div class="item-pergunta">
+                    {{ item.pergunta }}
+                    {% if item.obrigatorio %}
+                        <span class="required-badge">Obrigatório</span>
+                    {% endif %}
+                </div>
+                <div class="item-actions">
+                    <button class="btn-icon" onclick="editarItem({{ item.id }})" title="Editar">
+                        <i class="fa-solid fa-edit"></i>
+                    </button>
+                    <button class="btn-icon" onclick="abrirModalExcluirItem({{ item.id }})" title="Excluir">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="item-details">
+                <div class="checklist-response-preview">
+                    <div class="response-options-preview">
+                        {% if item.tipo_resposta == 'sim_nao' %}
+                            <span><i class="answer-radio checked"></i> Atende</span>
+                            <span><i class="answer-radio"></i> Não atende</span>
+                            <span><i class="answer-radio"></i> Não se aplica</span>
+                        {% elif item.tipo_resposta == 'texto' %}
+                            <span class="answer-field-preview"><i class="fa-solid fa-align-left"></i> Campo de texto</span>
+                        {% elif item.tipo_resposta == 'numero' %}
+                            <span class="answer-field-preview"><i class="fa-solid fa-hashtag"></i> Campo numérico</span>
+                        {% elif item.tipo_resposta == 'data' %}
+                            <span class="answer-field-preview"><i class="fa-solid fa-calendar-day"></i> Campo de data</span>
+                        {% else %}
+                            <span class="answer-field-preview"><i class="fa-solid fa-camera"></i> Enviar foto</span>
+                        {% endif %}
+                    </div>
+                    <button type="button" class="btn-add-action-preview" disabled>Adicionar ação</button>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Tipo de Resposta:</span>
+                    <span class="detail-value">
+                        {% if item.tipo_resposta == 'sim_nao' %}Atende / Não atende / Não se aplica{% else %}{{ item.get_tipo_resposta_display }}{% endif %}
+                    </span>
+                </div>
+                {% if item.detalhamento %}
+                <div class="detail-row">
+                    <span class="detail-label">Detalhamento:</span>
+                    <span class="detail-value">{{ item.detalhamento }}</span>
+                </div>
+                {% endif %}
+                {% if item.secao %}
+                <div class="detail-row">
+                    <span class="detail-label">Seção:</span>
+                    <span class="detail-value">{{ item.secao.nome }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <p>Nenhum item de checklist cadastrado</p>
+            <button class="btn btn-primary" onclick="abrirModalCriarItem()">
+                Criar primeira pergunta
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal Criar/Editar Item -->
+<div id="itemModal" class="modal">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <h2 id="modalTitle">Criar Pergunta</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="itemForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="itemId" name="itemId">
+                <input type="hidden" id="tipoEquipamentoId" value="{{ tipo_equipamento.id }}">
+                
+                <div class="form-group">
+                    <label for="secao">
+                        <i class="fa-solid fa-layer-group"></i> Seção
+                    </label>
+                    <select id="secao" name="secao" class="form-control">
+                        <option value="">Selecione uma seção...</option>
+                        {% for secao in secoes %}
+                            <option value="{{ secao.id }}">{{ secao.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="pergunta">
+                        <i class="fa-solid fa-question-circle"></i> Pergunta <span class="required">*</span>
+                    </label>
+                    <textarea id="pergunta" name="pergunta" class="form-control" rows="2" 
+                              placeholder="Ex: Pressurização (manômetro) está no indicativo verde?"></textarea>
+                </div>
+
+                <div class="checklist-modal-preview">
+                    <div class="preview-title">
+                        <span><i class="fa-solid fa-eye"></i> Prévia no serviço</span>
+                        <strong id="previewObrigatorio">Obrigatório</strong>
+                    </div>
+                    <div class="checklist-response-preview modal-preview-row">
+                        <div>
+                            <p id="previewPergunta">1 - A pergunta aparecerá aqui</p>
+                            <div id="previewResposta" class="response-options-preview"></div>
+                        </div>
+                        <button type="button" class="btn-add-action-preview" disabled>Adicionar ação</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo_resposta">
+                        <i class="fa-solid fa-check-square"></i> Tipo de Resposta <span class="required">*</span>
+                    </label>
+                    <select id="tipo_resposta" name="tipo_resposta" class="form-control">
+                        <option value="sim_nao">Atende / Não atende / Não se aplica</option>
+                        <option value="texto">Texto</option>
+                        <option value="numero">Número</option>
+                        <option value="data">Data</option>
+                        <option value="foto">Foto</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="detalhamento">
+                        <i class="fa-solid fa-align-left"></i> Detalhamento da Pergunta
+                    </label>
+                    <textarea id="detalhamento" name="detalhamento" class="form-control" rows="3"
+                              placeholder="Objetivo deste campo é ajudar o executor a responder esta pergunta da maneira correta"></textarea>
+                    <small class="form-text">Instruções adicionais para quem for responder</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="imagem_descritiva">
+                        <i class="fa-solid fa-image"></i> Imagem Descritiva
+                    </label>
+                    <input type="file" id="imagem_descritiva" name="imagem_descritiva" class="form-control" accept="image/*">
+                    <div id="imagemPreview" class="image-preview" style="display: none;">
+                        <img src="" alt="Preview" style="max-width: 200px; margin-top: 10px;">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ordem">
+                            <i class="fa-solid fa-sort-numeric-down"></i> Ordem
+                        </label>
+                        <input type="number" id="ordem" name="ordem" class="form-control" value="0">
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <label for="obrigatorio">
+                            <i class="fa-solid fa-star-of-life"></i> Obrigatório
+                        </label>
+                        <input type="checkbox" id="obrigatorio" name="obrigatorio" checked>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-save"></i> Salvar
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalItem()">
+                        <i class="fa-solid fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Excluir Item -->
+<div id="excluirItemModal" class="modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h2><i class="fa-solid fa-trash"></i> Excluir Pergunta</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja excluir esta pergunta?</p>
+            <p class="text-warning">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+                Esta ação não poderá ser desfeita.
+            </p>
+            <div class="form-actions">
+                <button onclick="confirmarExcluirItem()" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i> Excluir
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="fecharModalExcluirItem()">
+                    <i class="fa-solid fa-times"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const CSRF_TOKEN = '{{ csrf_token }}';
+    let itemParaExcluir = null;
+
+    function abrirModalCriarItem() {
+        document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-plus"></i> Criar Pergunta';
+        document.getElementById('itemForm').reset();
+        document.getElementById('itemId').value = '';
+        document.getElementById('imagemPreview').style.display = 'none';
+        document.getElementById('obrigatorio').checked = true;
+        atualizarPreviewPergunta();
+        document.getElementById('itemModal').style.display = 'block';
+    }
+
+    function editarItem(id) {
+        fetch(`/api/checklist-itens/${id}/`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('request_failed');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-edit"></i> Editar Pergunta';
+                    document.getElementById('itemId').value = data.item.id;
+                    document.getElementById('secao').value = data.item.secao_id || '';
+                    document.getElementById('pergunta').value = data.item.pergunta;
+                    document.getElementById('tipo_resposta').value = data.item.tipo_resposta;
+                    document.getElementById('detalhamento').value = data.item.detalhamento || '';
+                    document.getElementById('ordem').value = data.item.ordem;
+                    document.getElementById('obrigatorio').checked = data.item.obrigatorio;
+                    atualizarPreviewPergunta();
+                    
+                    if (data.item.imagem_url) {
+                        const preview = document.getElementById('imagemPreview');
+                        const img = preview.querySelector('img');
+                        img.src = data.item.imagem_url;
+                        preview.style.display = 'block';
+                    }
+                    
+                    document.getElementById('itemModal').style.display = 'block';
+                } else {
+                    mostrarToast(data.error || 'Não foi possível carregar esta pergunta.', true);
+                }
+            })
+            .catch(() => {
+                mostrarToast('Não foi possível carregar esta pergunta.', true);
+            });
+    }
+
+    function abrirModalExcluirItem(id) {
+        itemParaExcluir = id;
+        document.getElementById('excluirItemModal').style.display = 'block';
+    }
+
+    function confirmarExcluirItem() {
+        if (!itemParaExcluir) return;
+        
+        fetch(`/api/checklist-itens/${itemParaExcluir}/excluir/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('request_failed');
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                mostrarToast(data.message || 'Pergunta excluída com sucesso.');
+                fecharModalExcluirItem();
+                location.reload();
+            } else {
+                mostrarToast(data.error || 'Erro ao excluir pergunta.', true);
+            }
+        })
+        .catch(() => {
+            mostrarToast('Erro ao excluir pergunta. Tente novamente.', true);
+        });
+    }
+
+    function fecharModalItem() {
+        document.getElementById('itemModal').style.display = 'none';
+    }
+
+    function fecharModalExcluirItem() {
+        document.getElementById('excluirItemModal').style.display = 'none';
+        itemParaExcluir = null;
+    }
+
+    function getCookie(name) {
+        if (name === 'csrftoken' && typeof CSRF_TOKEN !== 'undefined' && CSRF_TOKEN) {
+            return CSRF_TOKEN;
+        }
+
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function renderRespostaPreview(tipo) {
+        if (tipo === 'texto') {
+            return '<span class="answer-field-preview"><i class="fa-solid fa-align-left"></i> Campo de texto</span>';
+        }
+        if (tipo === 'numero') {
+            return '<span class="answer-field-preview"><i class="fa-solid fa-hashtag"></i> Campo numérico</span>';
+        }
+        if (tipo === 'data') {
+            return '<span class="answer-field-preview"><i class="fa-solid fa-calendar-day"></i> Campo de data</span>';
+        }
+        if (tipo === 'foto') {
+            return '<span class="answer-field-preview"><i class="fa-solid fa-camera"></i> Enviar foto</span>';
+        }
+        return `
+            <span><i class="answer-radio checked"></i> Atende</span>
+            <span><i class="answer-radio"></i> Não atende</span>
+            <span><i class="answer-radio"></i> Não se aplica</span>
+        `;
+    }
+
+    function atualizarPreviewPergunta() {
+        const pergunta = document.getElementById('pergunta')?.value.trim() || 'A pergunta aparecerá aqui';
+        const tipo = document.getElementById('tipo_resposta')?.value || 'sim_nao';
+        const obrigatorio = document.getElementById('obrigatorio')?.checked;
+
+        const previewPergunta = document.getElementById('previewPergunta');
+        const previewObrigatorio = document.getElementById('previewObrigatorio');
+        const previewResposta = document.getElementById('previewResposta');
+
+        if (previewPergunta) previewPergunta.textContent = `1 - ${pergunta}`;
+        if (previewObrigatorio) previewObrigatorio.textContent = obrigatorio ? 'Obrigatório' : 'Opcional';
+        if (previewResposta) previewResposta.innerHTML = renderRespostaPreview(tipo);
+    }
+
+    // Configurar eventos quando o DOM carregar
+    document.addEventListener('DOMContentLoaded', function() {
+        ['pergunta', 'tipo_resposta', 'obrigatorio'].forEach(id => {
+            const field = document.getElementById(id);
+            if (!field) return;
+            field.addEventListener(field.type === 'checkbox' || field.tagName === 'SELECT' ? 'change' : 'input', atualizarPreviewPergunta);
+        });
+        atualizarPreviewPergunta();
+
+        // Preview de imagem
+        const imagemInput = document.getElementById('imagem_descritiva');
+        if (imagemInput) {
+            imagemInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const preview = document.getElementById('imagemPreview');
+                        const img = preview.querySelector('img');
+                        img.src = event.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Fechar modais ao clicar no X
+        const closeBtns = document.querySelectorAll('.close');
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                fecharModalItem();
+                fecharModalExcluirItem();
+            });
+        });
+
+        // Fechar modais ao clicar fora
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('itemModal');
+            const excluirModal = document.getElementById('excluirItemModal');
+            if (e.target === modal) fecharModalItem();
+            if (e.target === excluirModal) fecharModalExcluirItem();
+        });
+
+        // Salvar formulário
+        const form = document.getElementById('itemForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const id = document.getElementById('itemId').value;
+                const tipoEquipamentoId = document.getElementById('tipoEquipamentoId').value;
+                const secao = document.getElementById('secao').value;
+                const pergunta = document.getElementById('pergunta').value;
+                const tipoResposta = document.getElementById('tipo_resposta').value;
+                const detalhamento = document.getElementById('detalhamento').value;
+                const ordem = document.getElementById('ordem').value;
+                const obrigatorio = document.getElementById('obrigatorio').checked;
+                const imagem = document.getElementById('imagem_descritiva').files[0];
+                
+                if (!pergunta || pergunta.trim() === '') {
+                    mostrarToast('A pergunta é obrigatória.', true);
+                    document.getElementById('pergunta').focus();
+                    return;
+                }
+                
+                const formData = new FormData();
+                formData.append('tipo_equipamento_id', tipoEquipamentoId);
+                formData.append('secao_id', secao);
+                formData.append('pergunta', pergunta);
+                formData.append('tipo_resposta', tipoResposta);
+                formData.append('detalhamento', detalhamento);
+                formData.append('ordem', ordem);
+                formData.append('obrigatorio', obrigatorio);
+                if (imagem) formData.append('imagem_descritiva', imagem);
+                
+                const submitBtn = document.querySelector('#itemForm button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+                submitBtn.disabled = true;
+                
+                let url, method;
+                if (id) {
+                    url = `/api/checklist-itens/${id}/editar/`;
+                    method = 'POST';
+                } else {
+                    url = '/api/checklist-itens/criar/';
+                    method = 'POST';
+                }
+                
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('request_failed');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        mostrarToast(data.message || 'Pergunta salva com sucesso.');
+                        fecharModalItem();
+                        location.reload();
+                    } else {
+                        mostrarToast(data.error || 'Erro ao salvar pergunta.', true);
+                    }
+                })
+                .catch(() => {
+                    mostrarToast('Erro ao salvar pergunta. Tente novamente.', true);
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                });
+            });
+        }
+    });
+
+    function mostrarToast(message, isError = false) {
+        const toast = document.createElement('div');
+        toast.className = `checklist-toast ${isError ? 'toast-error' : 'toast-success'}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => toast.classList.add('show'));
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 180);
+        }, 2600);
+    }
+</script>
+{% endblock %}

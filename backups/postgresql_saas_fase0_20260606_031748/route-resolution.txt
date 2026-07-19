@@ -1,0 +1,6 @@
+/api/servicos/criar/	api_servicos_criar	core.views.api_servicos_criar
+/api/equipamentos/	api_equipamentos_listar	core.views.api_equipamentos_listar
+/api/login/	api-login	core.views_api.view
+/api/mobile/servicos/criar/	api-mobile-servicos-criar	core.views_api.view
+/api/equipamentos/1/tipos-servico/	api-equipamento-tipos-servico	core.views_api.view
+/api/qr/equipamento/	api-qr-equipamento	core.views_api.view

@@ -1,0 +1,195 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Minha Conta - NotchFire{% endblock %}
+{% block nav_minha_conta %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/minha_conta.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="account-page">
+    <div class="page-header">
+        <div>
+            <h1><i class="fa-solid fa-user-gear"></i> Minha Conta</h1>
+            <p>Atualize seus dados de acesso, foto de perfil e senha</p>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="account-messages">
+        {% for message in messages %}
+        <div class="account-alert {{ message.tags }}">
+            <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% else %}fa-triangle-exclamation{% endif %}"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="account-layout">
+        {% csrf_token %}
+
+        <aside class="profile-panel">
+            <div class="photo-shell">
+                {% if perfil.foto %}
+                <img id="profilePreview" src="{{ perfil.foto.url }}" alt="Foto de {{ nome_exibicao }}">
+                {% else %}
+                <img id="profilePreview" src="{% static 'core/img/logo.png' %}" alt="Foto de {{ nome_exibicao }}">
+                {% endif %}
+                <label for="foto" class="photo-action" title="Alterar foto">
+                    <i class="fa-solid fa-camera"></i>
+                </label>
+                <input type="file" id="foto" name="foto" accept=".jpg,.jpeg,.png,.gif,.webp">
+            </div>
+            {% if field_errors.foto %}
+            <span class="field-error centered">{{ field_errors.foto }}</span>
+            {% endif %}
+
+            <div class="profile-summary">
+                <strong>{{ nome_exibicao }}</strong>
+                <span>{{ request.user.email|default:"E-mail não informado" }}</span>
+            </div>
+
+            <div class="profile-meta">
+                <div>
+                    <span>Usuário</span>
+                    <strong>{{ request.user.username }}</strong>
+                </div>
+                <div>
+                    <span>Acesso</span>
+                    <strong>{{ perfil.get_tipo_acesso_display|default:"Usuário" }}</strong>
+                </div>
+            </div>
+        </aside>
+
+        <section class="account-panel">
+            <div class="panel-header">
+                <div>
+                    <span class="eyebrow">Dados pessoais</span>
+                    <h2>Informações da conta</h2>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <label class="form-field">
+                    <span>Nome</span>
+                    <input
+                        type="text"
+                        name="nome_completo"
+                        value="{{ request.POST.nome_completo|default:nome_exibicao }}"
+                        autocomplete="name"
+                        required
+                    >
+                    {% if field_errors.nome_completo %}
+                    <small>{{ field_errors.nome_completo }}</small>
+                    {% endif %}
+                </label>
+
+                <label class="form-field">
+                    <span>Nome de usuário</span>
+                    <input
+                        type="text"
+                        name="username"
+                        value="{{ request.POST.username|default:request.user.username }}"
+                        autocomplete="username"
+                        {% if usuario_simples %}readonly aria-readonly="true"{% endif %}
+                        required
+                    >
+                    {% if usuario_simples %}
+                    <small>Seu nome de usuário de acesso não pode ser alterado neste perfil.</small>
+                    {% endif %}
+                    {% if field_errors.username %}
+                    <small>{{ field_errors.username }}</small>
+                    {% endif %}
+                </label>
+
+                <label class="form-field form-field-wide">
+                    <span>E-mail</span>
+                    <input
+                        type="email"
+                        name="email"
+                        value="{{ request.POST.email|default:request.user.email }}"
+                        autocomplete="email"
+                        {% if usuario_simples %}readonly aria-readonly="true"{% endif %}
+                        required
+                    >
+                    {% if usuario_simples %}
+                    <small>Seu e-mail de acesso não pode ser alterado neste perfil.</small>
+                    {% endif %}
+                    {% if field_errors.email %}
+                    <small>{{ field_errors.email }}</small>
+                    {% endif %}
+                </label>
+            </div>
+
+            <div class="password-section">
+                <div class="panel-header compact">
+                    <div>
+                        <span class="eyebrow">Segurança</span>
+                        <h2>Alterar senha</h2>
+                    </div>
+                    <span class="optional-chip">Opcional</span>
+                </div>
+
+                <div class="form-grid">
+                    <label class="form-field">
+                        <span>Senha atual</span>
+                        <div class="password-input">
+                            <input type="password" name="senha_atual" autocomplete="current-password">
+                            <button type="button" class="toggle-password" title="Mostrar senha">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                        {% if field_errors.senha_atual %}
+                        <small>{{ field_errors.senha_atual }}</small>
+                        {% endif %}
+                    </label>
+
+                    <label class="form-field">
+                        <span>Nova senha</span>
+                        <div class="password-input">
+                            <input type="password" name="nova_senha" autocomplete="new-password">
+                            <button type="button" class="toggle-password" title="Mostrar senha">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                        {% if field_errors.nova_senha %}
+                        <small>{{ field_errors.nova_senha }}</small>
+                        {% endif %}
+                    </label>
+
+                    <label class="form-field form-field-wide">
+                        <span>Confirmar nova senha</span>
+                        <div class="password-input">
+                            <input type="password" name="confirmar_senha" autocomplete="new-password">
+                            <button type="button" class="toggle-password" title="Mostrar senha">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                        {% if field_errors.confirmar_senha %}
+                        <small>{{ field_errors.confirmar_senha }}</small>
+                        {% endif %}
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'home' %}" class="btn btn-outline">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Voltar
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Salvar alterações
+                </button>
+            </div>
+        </section>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/minha_conta.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Calendário - NotchFire{% endblock %}
+{% block nav_calendario %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/calendario.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="calendario-container">
+    <div class="calendar-header">
+        <div class="header-copy">
+            <h1><i class="fa-solid fa-calendar-days"></i> Calendário</h1>
+            <p>Veja revisões previstas, atrasadas e realizadas no mês</p>
+        </div>
+        <div class="header-actions">
+            <button type="button" class="btn btn-outline" id="toggleFilters">
+                <i class="fa-solid fa-sliders"></i>
+                Filtros
+                <span id="activeFiltersCount" class="filter-count">0</span>
+            </button>
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <button type="button" class="btn btn-primary" id="exportCalendar">
+                <i class="fa-solid fa-file-export"></i>
+                Exportar dados
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <section class="filters-panel" id="filtersPanel">
+        <div class="filters-title">
+            <div>
+                <span class="eyebrow">Filtros inteligentes</span>
+                <h2>Refine a visão do calendário</h2>
+            </div>
+            <button type="button" class="btn-icon" id="closeFilters" title="Fechar filtros">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="filters-grid">
+            <label class="filter-field">
+                <span>Site / Prédio</span>
+                <select id="filterPredio"></select>
+            </label>
+            <label class="filter-field">
+                <span>Departamento</span>
+                <select id="filterDepartamento"></select>
+            </label>
+            <label class="filter-field">
+                <span>Grupo do equipamento</span>
+                <select id="filterGrupo"></select>
+            </label>
+            <label class="filter-field">
+                <span>Tipo de equipamento</span>
+                <select id="filterTipoEquipamento"></select>
+            </label>
+            <label class="filter-field">
+                <span>Tipo de serviço</span>
+                <select id="filterTipoServico"></select>
+            </label>
+            <label class="filter-field">
+                <span>Periodicidade</span>
+                <select id="filterPeriodicidade"></select>
+            </label>
+            <label class="filter-field">
+                <span>Inspecionado por</span>
+                <select id="filterResponsavel"></select>
+            </label>
+            <label class="filter-field">
+                <span>Status no mês</span>
+                <select id="filterStatus">
+                    <option value="">Todos os status</option>
+                    <option value="pendente">Pendentes</option>
+                    <option value="vencida">Vencidas</option>
+                    <option value="realizada">Realizadas</option>
+                </select>
+            </label>
+            <label class="filter-field">
+                <span>Ações corretivas</span>
+                <select id="filterAcoes">
+                    <option value="">Todas</option>
+                    <option value="com_acoes">Com ações</option>
+                    <option value="sem_acoes">Sem ações</option>
+                </select>
+            </label>
+            <label class="filter-field filter-search">
+                <span>Busca rápida</span>
+                <input type="search" id="filterBusca" placeholder="Equipamento, série ou local">
+            </label>
+        </div>
+
+        <div class="filters-footer">
+            <div id="activeChips" class="active-chips"></div>
+            <div class="filter-actions">
+                <button type="button" class="btn btn-outline" id="clearFilters">
+                    <i class="fa-solid fa-eraser"></i>
+                    Limpar
+                </button>
+                <button type="button" class="btn btn-primary" id="applyFilters">
+                    <i class="fa-solid fa-check"></i>
+                    Aplicar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class="calendar-summary" id="calendarSummary">
+        <article class="summary-card summary-total">
+            <span>Revisões no mês</span>
+            <strong id="summaryTotal">0</strong>
+        </article>
+        <article class="summary-card summary-pending">
+            <span>Pendentes</span>
+            <strong id="summaryPendentes">0</strong>
+        </article>
+        <article class="summary-card summary-late">
+            <span>Vencidas</span>
+            <strong id="summaryVencidas">0</strong>
+        </article>
+        <article class="summary-card summary-done">
+            <span>Realizadas</span>
+            <strong id="summaryRealizadas">0</strong>
+        </article>
+    </div>
+
+    <section class="calendar-board">
+        <div class="calendar-toolbar">
+            <div class="month-controls">
+                <button type="button" class="btn-icon" id="prevMonth" title="Mês anterior">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button type="button" class="btn btn-outline btn-today" id="todayMonth">Hoje</button>
+                <button type="button" class="btn-icon" id="nextMonth" title="Próximo mês">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="month-title">
+                <span id="monthName">Mês</span>
+                <strong id="monthYear">2026</strong>
+            </div>
+            <div class="legend">
+                <span><i class="legend-dot pending"></i> Pendente</span>
+                <span><i class="legend-dot late"></i> Vencida</span>
+                <span><i class="legend-dot done"></i> Realizada</span>
+            </div>
+        </div>
+
+        <div class="weekdays" aria-hidden="true">
+            <span>Seg</span>
+            <span>Ter</span>
+            <span>Qua</span>
+            <span>Qui</span>
+            <span>Sex</span>
+            <span>Sáb</span>
+            <span>Dom</span>
+        </div>
+
+        <div class="calendar-grid" id="calendarGrid"></div>
+    </section>
+
+    <section class="month-details">
+        <article class="detail-panel">
+            <div class="detail-header">
+                <div>
+                    <span class="eyebrow">Prioridade</span>
+                    <h2>Revisões que precisam de atenção</h2>
+                </div>
+            </div>
+            <div id="attentionList" class="detail-list"></div>
+        </article>
+
+        <article class="detail-panel">
+            <div class="detail-header">
+                <div>
+                    <span class="eyebrow">Execução</span>
+                    <h2>Quem revisou neste mês</h2>
+                </div>
+            </div>
+            <div id="responsaveisList" class="people-list"></div>
+        </article>
+    </section>
+</div>
+
+<div class="event-drawer" id="eventDrawer" aria-hidden="true">
+    <div class="event-drawer-panel">
+        <div class="drawer-header">
+            <div>
+                <span id="drawerDate" class="eyebrow">Dia selecionado</span>
+                <h2 id="drawerTitle">Revisões</h2>
+            </div>
+            <button type="button" class="btn-icon" id="closeDrawer" title="Fechar detalhes">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div id="drawerEvents" class="drawer-events"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/calendario.js' %}?v=20260617-permissoes"></script>
+{% endblock %}

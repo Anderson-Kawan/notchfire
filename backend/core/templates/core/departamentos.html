@@ -1,0 +1,273 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}NothFire - Departamentos{% endblock %}
+{% block nav_departamentos %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/departamentos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="departamentos-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-building"></i> Departamentos</h1>
+            <p>Gerencie os departamentos da empresa</p>
+        </div>
+        <div class="header-right">
+            <button type="button" class="btn btn-primary" onclick="abrirModalCriarDepartamento()">
+                <i class="fa-solid fa-plus"></i> Novo Departamento
+            </button>
+        </div>
+    </div>
+
+    <div class="dept-summary">
+        <div class="summary-card">
+            <span class="summary-label">Departamentos</span>
+            <strong id="summaryTotal">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Ativos</span>
+            <strong id="summaryAtivos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Inativos</span>
+            <strong id="summaryInativos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Com prédio</span>
+            <strong id="summaryPredios">0</strong>
+        </div>
+    </div>
+
+    <div class="list-controls">
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search"></i>
+                <input
+                    type="text"
+                    id="searchDepartamento"
+                    class="search-input"
+                    placeholder="Pesquisar por departamento, responsável, prédio..."
+                >
+                <button type="button" id="clearSearch" class="clear-search" style="display: none;" title="Limpar busca">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-circle"></i>
+                <select id="filtroStatus" class="filter-select">
+                    <option value="">Todos os status</option>
+                    <option value="ativo">Ativos</option>
+                    <option value="inativo">Inativos</option>
+                </select>
+            </div>
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-building"></i>
+                <select id="filtroPredio" class="filter-select">
+                    <option value="">Todos os prédios</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="departamentos-table" id="departamentosTable">
+            <thead>
+                <tr>
+                    <th class="col-departamento">
+                        Departamento
+                        <i class="fa-solid fa-arrow-up sort-icon" data-sort="asc"></i>
+                    </th>
+                    <th class="col-descricao">Descrição</th>
+                    <th class="col-localizacao">Localização</th>
+                    <th class="col-responsavel">Responsável</th>
+                    <th class="col-predio">Prédio</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-data">Criado em</th>
+                    <th class="col-actions">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="departamentosTableBody">
+                <!-- Preenchido via JavaScript -->
+            </tbody>
+        </table>
+
+        <div id="loading" class="loading" style="display: none;">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Carregando departamentos...</p>
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <i class="fa-solid fa-folder-open"></i>
+            <p>Nenhum departamento encontrado</p>
+            <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalCriarDepartamento()">
+                Criar primeiro departamento
+            </button>
+        </div>
+    </div>
+
+    <div class="pagination-container" id="pagination">
+        <div class="rows-per-page">
+            <label for="rowsPerPage">Linhas por página:</label>
+            <select id="rowsPerPage">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <div class="pagination-controls" id="paginationControls"></div>
+    </div>
+</div>
+
+<!-- Modal Criar/Editar -->
+<div id="departamentoModal" class="modal">
+    <div class="modal-content modal-large">
+        <form id="departamentoForm">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title"><i class="fa-solid fa-plus"></i> Novo Departamento</h2>
+                <button type="button" class="modal-close close" title="Fechar">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="departamentoId" name="departamentoId">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nome" class="form-label">Nome do Departamento *</label>
+                        <input
+                            type="text"
+                            id="nome"
+                            name="nome"
+                            class="form-control"
+                            placeholder="Ex: Recursos Humanos, TI, Financeiro"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="responsavel" class="form-label">Responsável</label>
+                        <input
+                            type="text"
+                            id="responsavel"
+                            name="responsavel"
+                            class="form-control"
+                            placeholder="Nome do responsável"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email" class="form-label">E-mail</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="departamento@empresa.com"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone" class="form-label">Telefone</label>
+                        <input
+                            type="text"
+                            id="telefone"
+                            name="telefone"
+                            class="form-control"
+                            placeholder="(00) 00000-0000"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="localizacao" class="form-label">Localização</label>
+                    <input
+                        type="text"
+                        id="localizacao"
+                        name="localizacao"
+                        class="form-control"
+                        placeholder="Andar, sala, prédio"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <textarea
+                        id="descricao"
+                        name="descricao"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Descrição do departamento..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="predio" class="form-label">Prédio</label>
+                    <select id="predio" name="predio" class="form-control">
+                        <option value="">Selecione um prédio...</option>
+                    </select>
+                    <small class="form-text">
+                        <i class="fa-solid fa-info-circle"></i>
+                        Selecione o prédio onde este departamento está localizado.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="form-label">Status</label>
+                    <select id="status" name="status" class="form-control">
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+
+                <div id="formFeedback" class="form-feedback" role="alert"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-save"></i> Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Excluir -->
+<div id="excluirModal" class="modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h2><i class="fa-solid fa-trash"></i> Excluir Departamento</h2>
+            <button type="button" class="modal-close close" title="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja excluir o departamento <strong id="excluirNome"></strong>?</p>
+            <p class="text-warning">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+                Esta ação não poderá ser desfeita.
+            </p>
+            <div class="form-actions">
+                <button type="button" onclick="confirmarExcluir()" class="btn btn-danger">
+                    Excluir
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="fecharModalExcluir()">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/departamentos.js' %}?v=20260617-permissoes"></script>
+{% endblock %}

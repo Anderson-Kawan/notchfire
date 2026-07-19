@@ -1,0 +1,295 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}NothFire - Grupos{% endblock %}
+{% block nav_grupos %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/grupos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="grupos-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-layer-group"></i> Grupos</h1>
+            <p>Organize os grupos de equipamentos do sistema</p>
+        </div>
+        <div class="header-right">
+            <button type="button" class="btn btn-primary" onclick="abrirModalCriarGrupo()">
+                <i class="fa-solid fa-plus"></i> Novo Grupo
+            </button>
+        </div>
+    </div>
+
+    <div class="grupo-summary">
+        <div class="summary-card">
+            <span class="summary-label">Grupos</span>
+            <strong id="summaryTotal">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Ativos</span>
+            <strong id="summaryAtivos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Inativos</span>
+            <strong id="summaryInativos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Equipamentos</span>
+            <strong id="summaryEquipamentos">0</strong>
+        </div>
+    </div>
+
+    <div class="list-controls">
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search"></i>
+                <input
+                    type="text"
+                    id="searchGrupo"
+                    class="search-input"
+                    placeholder="Pesquisar por grupo ou descrição..."
+                >
+                <button type="button" id="clearSearch" class="clear-search" style="display: none;" title="Limpar busca">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-circle"></i>
+                <select id="filtroStatus" class="filter-select">
+                    <option value="">Todos os status</option>
+                    <option value="ativo">Ativos</option>
+                    <option value="inativo">Inativos</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="grupos-table" id="gruposTable">
+            <thead>
+                <tr>
+                    <th class="col-grupo">
+                        Grupo
+                        <i class="fa-solid fa-arrow-up sort-icon" data-sort="asc"></i>
+                    </th>
+                    <th class="col-descricao">Descrição</th>
+                    <th class="col-equipamentos">Equipamentos</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-data">Criado em</th>
+                    <th class="col-actions">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="gruposTableBody">
+                <!-- Preenchido via JavaScript -->
+            </tbody>
+        </table>
+
+        <div id="loading" class="loading" style="display: none;">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Carregando grupos...</p>
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <i class="fa-solid fa-folder-open"></i>
+            <p>Nenhum grupo encontrado</p>
+            <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalCriarGrupo()">
+                Criar primeiro grupo
+            </button>
+        </div>
+    </div>
+
+    <div class="pagination-container" id="pagination">
+        <div class="rows-per-page">
+            <label for="rowsPerPage">Linhas por página:</label>
+            <select id="rowsPerPage">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <div class="pagination-controls" id="paginationControls"></div>
+    </div>
+</div>
+
+<!-- Modal Equipamentos do Grupo -->
+<div id="equipamentosGrupoModal" class="modal">
+    <div class="modal-content modal-large drilldown-modal grupo-equipamentos-modal">
+        <div class="modal-header drilldown-header">
+            <div class="drilldown-title">
+                <span class="drilldown-icon"><i class="fa-solid fa-layer-group"></i></span>
+                <div>
+                    <span class="modal-kicker">Grupo de equipamentos</span>
+                    <h2 id="equipamentosGrupoTitle" class="modal-title">Equipamentos do grupo</h2>
+                </div>
+            </div>
+            <div class="drilldown-summary">
+                <span><strong id="equipamentosGrupoTotal">0</strong> total</span>
+                <span><strong id="equipamentosGrupoAtivos">0</strong> ativos</span>
+                <span><strong id="equipamentosGrupoInativos">0</strong> inativos</span>
+            </div>
+            <button type="button" class="modal-close close" title="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="modal-body drilldown-body">
+            <div class="grupo-equipamentos-drilldown">
+                <div class="drilldown-panel grupo-equipamentos-panel">
+                    <div class="drilldown-panel-header grupo-equipamentos-panel-header">
+                        <div>
+                            <h3>Equipamentos vinculados</h3>
+                            <small id="equipamentosGrupoSubtitle">0 equipamentos vinculados</small>
+                        </div>
+
+                        <div class="equipamentos-grupo-controls">
+                            <div class="search-wrapper">
+                                <i class="fa-solid fa-search"></i>
+                                <input
+                                    type="text"
+                                    id="searchEquipamentoGrupo"
+                                    class="search-input"
+                                    placeholder="Pesquisar equipamento, série, tipo ou local..."
+                                >
+                                <button type="button" id="clearSearchEquipamentosGrupo" class="clear-search" style="display: none;" title="Limpar busca">
+                                    <i class="fa-solid fa-times"></i>
+                                </button>
+                            </div>
+
+                            <div class="filter-wrapper">
+                                <i class="fa-solid fa-circle"></i>
+                                <select id="filtroStatusEquipamentosGrupo" class="filter-select">
+                                    <option value="">Todos os status</option>
+                                    <option value="ativo">Ativos</option>
+                                    <option value="inativo">Inativos</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="equipamentosGrupoLoading" class="drilldown-state equipamentos-grupo-loading" style="display: none;">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <span>Carregando equipamentos...</span>
+                    </div>
+
+                    <div id="equipamentosGrupoList" class="equipamentos-list equipamentos-grupo-list"></div>
+                    <div id="equipamentosGrupoNoResults" class="drilldown-state equipamentos-grupo-empty" style="display: none;"></div>
+
+                    <div class="pagination-container equipamentos-grupo-pagination">
+                        <div class="rows-per-page">
+                            <label for="rowsPerPageEquipamentosGrupo">Linhas por página:</label>
+                            <select id="rowsPerPageEquipamentosGrupo">
+                                <option value="5">5</option>
+                                <option value="8" selected>8</option>
+                                <option value="12">12</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="pagination-controls" id="equipamentosGrupoPaginationControls"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" onclick="fecharModalEquipamentosGrupo()">
+                <i class="fa-solid fa-xmark"></i> Fechar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Criar/Editar Grupo -->
+<div id="grupoModal" class="modal">
+    <div class="modal-content modal-large">
+        <form id="grupoForm">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">
+                    <i class="fa-solid fa-plus"></i> Novo Grupo
+                </h2>
+                <button type="button" class="modal-close close" title="Fechar">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="grupoId" name="grupoId">
+
+                <div class="form-group">
+                    <label for="nome" class="form-label">Nome do Grupo *</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        class="form-control"
+                        placeholder="Ex: Extintores, Hidrantes, Alarmes"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <textarea
+                        id="descricao"
+                        name="descricao"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Descreva quando este grupo deve ser usado..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="form-label">Status</label>
+                    <select id="status" name="status" class="form-control">
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+
+                <div id="formFeedback" class="form-feedback" role="alert"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-save"></i> Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Excluir Grupo -->
+<div id="excluirModal" class="modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h2><i class="fa-solid fa-trash"></i> Excluir Grupo</h2>
+            <button type="button" class="modal-close close" title="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja excluir o grupo <strong id="excluirNome"></strong>?</p>
+            <p class="text-warning">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+                Esta ação não poderá ser desfeita.
+            </p>
+            <div class="form-actions">
+                <button type="button" onclick="confirmarExcluir()" class="btn btn-danger">
+                    Excluir
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="fecharModalExcluir()">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/grupos.js' %}?v=grupos-equipamentos"></script>
+{% endblock %}

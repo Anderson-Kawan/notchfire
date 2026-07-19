@@ -1,0 +1,245 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}NothFire - Periodicidades{% endblock %}
+{% block nav_periodicidades %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/periodicidades.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="periodicidades-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-calendar-days"></i> Periodicidades</h1>
+            <p>Gerencie prazos e recorrências dos serviços e inspeções</p>
+        </div>
+        <div class="header-right">
+            <button type="button" class="btn btn-primary" onclick="abrirModalCriar()">
+                <i class="fa-solid fa-plus"></i> Nova Periodicidade
+            </button>
+        </div>
+    </div>
+
+    <div class="periodicidade-summary">
+        <div class="summary-card">
+            <span class="summary-label">Periodicidades</span>
+            <strong id="summaryTotal">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Ativas</span>
+            <strong id="summaryAtivos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Por demanda</span>
+            <strong id="summaryDemanda">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Configurações</span>
+            <strong id="summaryConfiguracoes">0</strong>
+        </div>
+    </div>
+
+    <div class="list-controls">
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search"></i>
+                <input
+                    type="text"
+                    id="searchPeriodicidade"
+                    class="search-input"
+                    placeholder="Pesquisar por periodicidade ou tipo..."
+                >
+                <button type="button" id="clearSearch" class="clear-search" style="display: none;" title="Limpar busca">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-circle"></i>
+                <select id="filtroStatus" class="filter-select">
+                    <option value="">Todos os status</option>
+                    <option value="ativo">Ativas</option>
+                    <option value="inativo">Inativas</option>
+                </select>
+            </div>
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-clock"></i>
+                <select id="filtroModo" class="filter-select">
+                    <option value="">Todos os modos</option>
+                    <option value="prazo">Com prazo</option>
+                    <option value="demanda">Por demanda</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="periodicidades-table" id="periodicidadesTable">
+            <thead>
+                <tr>
+                    <th class="col-nome">
+                        Periodicidade
+                        <i class="fa-solid fa-arrow-up sort-icon" data-sort="asc"></i>
+                    </th>
+                    <th class="col-descricao">Recorrência</th>
+                    <th class="col-configuracoes">Configurações</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-data">Criado em</th>
+                    <th class="col-actions">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="periodicidadesTableBody"></tbody>
+        </table>
+
+        <div id="loading" class="loading" style="display: none;">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Carregando periodicidades...</p>
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <i class="fa-solid fa-folder-open"></i>
+            <p>Nenhuma periodicidade encontrada</p>
+            <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalCriar()">
+                Criar primeira periodicidade
+            </button>
+        </div>
+    </div>
+
+    <div class="pagination-container" id="pagination">
+        <div class="rows-per-page">
+            <label for="rowsPerPage">Linhas por página:</label>
+            <select id="rowsPerPage">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <div class="pagination-controls" id="paginationControls"></div>
+    </div>
+</div>
+
+<!-- Modal Criar/Editar Periodicidade -->
+<div id="periodicidadeModal" class="modal">
+    <div class="modal-content modal-large">
+        <form id="periodicidadeForm">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">
+                    <i class="fa-solid fa-plus"></i> Nova Periodicidade
+                </h2>
+                <button type="button" class="modal-close close" title="Fechar">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="periodicidadeId" name="periodicidadeId">
+
+                <div class="form-group">
+                    <label for="nome" class="form-label">Nome *</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        class="form-control"
+                        placeholder="Ex: Mensal, Semanal, Anual"
+                        required
+                    >
+                </div>
+
+                <div class="switch-group">
+                    <div>
+                        <span class="switch-title">Por demanda</span>
+                        <span class="switch-hint">Use quando não houver prazo fixo para execução.</span>
+                    </div>
+                    <label class="switch" title="Por demanda">
+                        <input type="checkbox" id="porDemanda">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div id="periodoFields" class="periodo-fields">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="valor" class="form-label">Valor</label>
+                            <input
+                                type="number"
+                                id="valor"
+                                name="valor"
+                                class="form-control"
+                                placeholder="1"
+                                min="1"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipo" class="form-label">Tipo</label>
+                            <select id="tipo" name="tipo" class="form-control">
+                                <option value="">Selecione...</option>
+                                <option value="dias">Dias</option>
+                                <option value="semanas">Semanas</option>
+                                <option value="meses">Meses</option>
+                                <option value="anos">Anos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <small class="form-text">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Exemplo: Mensal = valor 1 + tipo Meses.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="form-label">Status</label>
+                    <select id="status" name="status" class="form-control">
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+
+                <div id="formFeedback" class="form-feedback" role="alert"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-save"></i> Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Excluir Periodicidade -->
+<div id="excluirModal" class="modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h2><i class="fa-solid fa-trash"></i> Excluir Periodicidade</h2>
+            <button type="button" class="modal-close close" title="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja excluir a periodicidade <strong id="excluirNome"></strong>?</p>
+            <p class="text-warning">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+                Esta ação não poderá ser desfeita.
+            </p>
+            <div class="form-actions">
+                <button type="button" onclick="confirmarExcluir()" class="btn btn-danger">
+                    Excluir
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="fecharModalExcluir()">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/periodicidades.js' %}?v=20260617-permissoes"></script>
+{% endblock %}

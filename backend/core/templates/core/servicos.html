@@ -1,0 +1,309 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}NothFire - Serviços{% endblock %}
+{% block nav_servicos %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/servicos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="servicos-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-toolbox"></i> Serviços</h1>
+            <p>Acompanhe inspeções, checklists e ações dos equipamentos</p>
+        </div>
+        <div class="header-right">
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <button type="button" class="btn btn-primary" onclick="abrirModalSelecionarEquipamento()">
+                <i class="fa-solid fa-plus"></i> Novo Serviço
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="servico-summary">
+        <div class="summary-card">
+            <span class="summary-label">Serviços</span>
+            <strong id="summaryTotal">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Concluídos</span>
+            <strong id="summaryConcluidos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Rascunhos</span>
+            <strong id="summaryRascunhos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Não conformes</span>
+            <strong id="summaryNaoConformes">0</strong>
+        </div>
+    </div>
+
+    <div class="list-controls">
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search"></i>
+                <input
+                    type="text"
+                    id="searchServico"
+                    class="search-input"
+                    placeholder="Pesquisar por equipamento, série ou serviço..."
+                >
+                <button type="button" id="clearSearch" class="clear-search" style="display: none;" title="Limpar busca">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-building"></i>
+                <select id="filtroSite" class="filter-select">
+                    <option value="">Todos os sites</option>
+                    <option value="C3">C3</option>
+                    <option value="C4">C4</option>
+                    <option value="C5">C5</option>
+                </select>
+            </div>
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-circle"></i>
+                <select id="filtroStatus" class="filter-select">
+                    <option value="">Todos os status</option>
+                    <option value="concluido">Concluídos</option>
+                    <option value="rascunho">Rascunhos</option>
+                    <option value="cancelado">Cancelados</option>
+                </select>
+            </div>
+            <div class="filter-wrapper filter-date">
+                <i class="fa-solid fa-calendar"></i>
+                <input type="date" id="filtroDataInicio" class="filter-input" title="Data inicial">
+            </div>
+            <div class="filter-wrapper filter-date">
+                <i class="fa-solid fa-calendar-check"></i>
+                <input type="date" id="filtroDataFim" class="filter-input" title="Data final">
+            </div>
+            <button type="button" id="limparFiltros" class="btn btn-outline">Limpar</button>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="servicos-table" id="servicosTable">
+            <thead>
+                <tr>
+                    <th class="col-data">Data</th>
+                    <th class="col-equipamento">Equipamento</th>
+                    <th class="col-tipo">Serviço</th>
+                    <th class="col-checklist">Checklist</th>
+                    <th class="col-local">Local</th>
+                    <th class="col-realizado">Realizado por</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-pontuacao">Pontuação</th>
+                    <th class="col-actions">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="servicosTableBody">
+                <!-- Preenchido via JavaScript -->
+            </tbody>
+        </table>
+
+        <div id="loading" class="loading" style="display: none;">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Carregando serviços...</p>
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <i class="fa-solid fa-folder-open"></i>
+            <p>Nenhum serviço encontrado</p>
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalSelecionarEquipamento()">
+                Realizar primeiro serviço
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="pagination-container" id="pagination">
+        <div class="rows-per-page">
+            <label for="rowsPerPage">Linhas por página:</label>
+            <select id="rowsPerPage">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <div class="pagination-controls" id="paginationControls"></div>
+    </div>
+</div>
+
+<!-- Modal Selecionar Equipamento -->
+<div id="selecionarEquipamentoModal" class="modal">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <h2 class="modal-title"><i class="fa-solid fa-fire-extinguisher"></i> Selecionar Equipamento</h2>
+            <button type="button" class="modal-close close" title="Fechar">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-toolbar">
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-search"></i>
+                    <input
+                        type="text"
+                        id="searchEquipamentoSelect"
+                        class="form-control search-input"
+                        placeholder="Pesquisar equipamento..."
+                    >
+                </div>
+                <div class="filter-wrapper">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <select id="filtroGrupoEquipamento" class="form-control filter-select">
+                        <option value="">Todos os grupos</option>
+                    </select>
+                </div>
+            </div>
+            <div class="equipamentos-list" id="equipamentosList"></div>
+            <div class="pagination-equipamentos" id="paginationEquipamentos"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Selecionar Tipo Serviço -->
+<div id="selecionarTipoServicoModal" class="modal">
+    <div class="modal-content modal-medium">
+        <div class="modal-header">
+            <h2 class="modal-title"><i class="fa-solid fa-clipboard-list"></i> Selecionar Tipo de Serviço</h2>
+            <button type="button" class="modal-close close" title="Fechar">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="equipamentoInfo" class="equipamento-info-card"></div>
+            <div class="tipos-servico-list" id="tiposServicoList"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Realizar Checklist -->
+<div id="checklistModal" class="modal">
+    <div class="modal-content modal-xlarge">
+        <div class="modal-header">
+            <h2 class="modal-title"><i class="fa-solid fa-check-double"></i> Realizar Checklist</h2>
+            <button type="button" class="modal-close close" title="Fechar">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="checklistInfo"></div>
+            <form id="checklistForm">
+                <input type="hidden" id="equipamentoId" name="equipamentoId">
+                <input type="hidden" id="tipoServicoId" name="tipoServicoId">
+                <div id="autosaveStatus" class="autosave-status">Rascunho automático ativo.</div>
+                <div id="checklistItems"></div>
+                <div class="form-group">
+                    <label for="observacoesServico" class="form-label">Observações Gerais</label>
+                    <textarea id="observacoesServico" class="form-control" rows="3" placeholder="Observações sobre o serviço..."></textarea>
+                </div>
+                <div class="modal-footer inline-footer">
+                    <button type="button" class="btn btn-outline" onclick="salvarRascunho()">
+                        <i class="fa-solid fa-save"></i> Salvar Rascunho
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check"></i> Concluir Serviço
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Adicionar Ação -->
+<div id="acaoModal" class="modal">
+    <div class="modal-content modal-medium">
+        <form id="acaoForm">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fa-solid fa-tools"></i> Cadastrar Nova Ação</h2>
+                <button type="button" class="modal-close close" title="Fechar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="acaoPergunta" class="acao-pergunta"></div>
+                <input type="hidden" id="acaoItemId" name="acaoItemId">
+                <div class="form-group">
+                    <label for="problema" class="form-label">Problema</label>
+                    <textarea id="problema" class="form-control" rows="3" placeholder="Descreva o problema identificado..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="acao" class="form-label">Ação</label>
+                    <textarea id="acao" class="form-control" rows="3" placeholder="Descreva a ação necessária..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="responsaveis" class="form-label">Responsáveis</label>
+                        <input type="text" id="responsaveis" class="form-control" placeholder="Nomes dos responsáveis">
+                    </div>
+                    <div class="form-group">
+                        <label for="prazo" class="form-label">Prazo</label>
+                        <input type="date" id="prazo" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="anexos" class="form-label">Anexar Arquivos</label>
+                    <input type="file" id="anexos" class="form-control" accept=".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                    <small class="form-text">.jpeg, .jpg, .png, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx</small>
+                </div>
+                <div id="acaoFeedback" class="form-feedback" role="alert"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="fecharModalAcao()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-save"></i> Salvar Ação
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Visualizar Detalhes -->
+<div id="detalhesModal" class="modal">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <h2 class="modal-title"><i class="fa-solid fa-eye"></i> Detalhes do Serviço</h2>
+            <button type="button" class="modal-close close" title="Fechar">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="detalhesServico"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" onclick="fecharModalDetalhes()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Rascunho -->
+<div id="rascunhoModal" class="modal">
+    <div class="modal-content modal-medium">
+        <div class="modal-header">
+            <h2 class="modal-title"><i class="fa-solid fa-file-alt"></i> Rascunho de Serviço</h2>
+            <button type="button" class="modal-close close" title="Fechar">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Existe um serviço em andamento para este equipamento:</p>
+            <div id="rascunhoInfo" class="rascunho-info"></div>
+        </div>
+        <div class="modal-footer">
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <button type="button" onclick="continuarRascunho()" class="btn btn-primary">
+                <i class="fa-solid fa-play"></i> Continuar
+            </button>
+            <button type="button" onclick="descartarRascunho()" class="btn btn-danger">
+                Descartar
+            </button>
+            {% endif %}
+            <button type="button" class="btn btn-outline" onclick="fecharModalRascunho()">Cancelar</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/servicos.js' %}?v=20260617-permissoes"></script>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NotchFire{% endblock %}</title>
+
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	    <link rel="stylesheet" href="{% static 'core/css/base.css' %}">
+	    {% block extra_css %}{% endblock %}
+	    <link rel="stylesheet" href="{% static 'core/css/modal-modern.css' %}?v=20260618-global">
+	</head>
+<body>
+
+    <div class="wrapper">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">NotchFire Admin</div>
+
+            <div class="menu-section">Área Geral</div>
+
+            <a href="{% url 'home' %}" class="nav-item {% block nav_home %}{% endblock %}">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </a>
+
+            <a href="{% url 'equipamentos' %}" class="nav-item {% block nav_equipamentos %}{% endblock %}">
+                <i class="fa-solid fa-fire-extinguisher"></i>
+                <span>Equipamentos</span>
+            </a>
+
+            <a href="{% url 'predios' %}" class="nav-item {% block nav_predios %}{% endblock %}">
+                <i class="fa-solid fa-building"></i>
+                <span>Prédios</span>
+            </a>
+
+            <a href="{% url 'calendario' %}" class="nav-item {% block nav_calendario %}{% endblock %}">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Calendário</span>
+            </a>
+
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <a href="{% url 'relatorios' %}" class="nav-item {% block nav_relatorios %}{% endblock %}">
+                <i class="fa-solid fa-chart-simple"></i>
+                <span>Relatórios</span>
+            </a>
+
+            {% if request.user.is_superuser %}
+            <a href="{% url 'usuarios' %}" class="nav-item {% block nav_usuarios %}{% endblock %}">
+                <i class="fa-solid fa-users-gear"></i>
+                <span>Usuários</span>
+            </a>
+            {% endif %}
+
+            <a href="{% url 'departamentos' %}" class="nav-item {% block nav_departamentos %}{% endblock %}">
+                    <i class="fa-solid fa-building"></i>
+                    <span>Departamentos</span>
+            </a>
+
+             <a href="{% url 'grupos' %}" class="nav-item {% block nav_grupos %}{% endblock %}">
+                <i class="fa-solid fa-users"></i>
+                <span>Grupos</span>
+            </a>
+
+            <a href="{% url 'tipos_servico' %}" class="nav-item {% block nav_tipos_servicos %}{% endblock %}">
+                    <i class="fa-solid fa-tags"></i>
+                    <span>Tipos de Serviços</span>
+            </a>
+
+            <a href="{% url 'periodicidades' %}" class="nav-item {% block nav_periodicidades %}{% endblock %}">
+                    <i class="fa-solid fa-calendar-alt"></i>
+                    <span>Periodicidades</span>
+            </a>
+
+            <a href="{% url 'tipos_equipamento' %}" class="nav-item {% block nav_tipos_equipamento %}{% endblock %}">
+                    <i class="fa-solid fa-microchip"></i>
+                    <span>Tipos de Equipamentos</span>
+            </a>
+            {% endif %}
+
+            <a href="{% url 'servicos' %}" class="nav-item {% block nav_servicos %}{% endblock %}">
+                    <i class="fa-solid fa-wrench"></i>
+                    <span>Serviços</span>
+            </a>
+
+            <a href="{% url 'rascunhos' %}" class="nav-item {% block nav_rascunhos %}{% endblock %}">
+                    <i class="fa-solid fa-file-pen"></i>
+                    <span>Rascunhos</span>
+            </a>
+            
+
+            <a href="{% url 'minha_conta' %}" class="nav-item {% block nav_minha_conta %}{% endblock %}">
+                <i class="fa-solid fa-user"></i>
+                <span>Minha Conta</span>
+            </a>
+
+            <a href="{% url 'logout' %}" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Sair</span>
+            </a>
+
+            <div class="menu-section">Sistema</div>
+        </aside>
+
+        <main class="main-content">
+            <header class="navbar">
+                <div class="nav-left">
+                    <button class="toggle-btn" onclick="toggleSidebar()">
+                        <i id="toggle-icon" class="fa-solid fa-arrow-left"></i>
+                    </button>
+
+                    <span class="brand-name">NotchFire</span>
+                </div>
+
+                <div class="user-profile">
+                    <div class="user-info">
+                        <strong>{{ request.user.username }}</strong>
+                    </div>
+                    {% if request.user.perfil.foto %}
+                    <img src="{{ request.user.perfil.foto.url }}" class="user-avatar" alt="Usuário">
+                    {% else %}
+                    <img src="{% static 'core/img/logo.png' %}" class="user-avatar" alt="Usuário">
+                    {% endif %}
+                </div>
+            </header>
+
+            <div class="dashboard-body">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'core/js/home.js' %}"></script>
+    <script>
+        window.NOTCHFIRE_CAN_MANAGE = {% if request.user.is_superuser or request.user.is_staff %}true{% else %}false{% endif %};
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

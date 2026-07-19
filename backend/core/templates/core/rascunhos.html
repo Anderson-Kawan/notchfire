@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Rascunhos - NotchFire{% endblock %}
+{% block nav_rascunhos %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/rascunhos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="rascunhos-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-file-pen"></i> Rascunhos</h1>
+            <p>Continue checklists que foram salvos automaticamente ou ficaram no cache deste navegador</p>
+        </div>
+        <div class="header-right">
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <a href="{% url 'servicos' %}" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> Novo Serviço
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="rascunho-summary">
+        <div class="summary-card">
+            <span class="summary-label">No sistema</span>
+            <strong id="summaryServidor">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Neste navegador</span>
+            <strong id="summaryLocal">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Total</span>
+            <strong id="summaryTotal">0</strong>
+        </div>
+    </div>
+
+    <div class="draft-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <div>
+            <strong>Como funciona</strong>
+            <span>Rascunhos do sistema podem ser retomados em qualquer sessão. O cache local aparece apenas neste navegador e serve como recuperação rápida se a conexão cair.</span>
+        </div>
+    </div>
+
+    <section class="draft-section">
+        <div class="section-title">
+            <h2><i class="fa-solid fa-cloud-arrow-up"></i> Salvos no sistema</h2>
+            <button type="button" class="btn btn-outline btn-sm" onclick="carregarRascunhos()">
+                <i class="fa-solid fa-rotate"></i> Atualizar
+            </button>
+        </div>
+        <div id="serverDrafts" class="draft-grid">
+            <div class="loading-card"><i class="fa-solid fa-spinner fa-spin"></i> Carregando rascunhos...</div>
+        </div>
+    </section>
+
+    <section class="draft-section">
+        <div class="section-title">
+            <h2><i class="fa-solid fa-laptop"></i> Cache deste navegador</h2>
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <button type="button" class="btn btn-outline btn-sm" onclick="limparRascunhosLocais()">
+                <i class="fa-solid fa-broom"></i> Limpar locais
+            </button>
+            {% endif %}
+        </div>
+        <div id="localDrafts" class="draft-grid"></div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/rascunhos.js' %}?v=20260617-permissoes"></script>
+{% endblock %}

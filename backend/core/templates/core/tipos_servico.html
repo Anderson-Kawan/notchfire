@@ -1,0 +1,208 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}NothFire - Tipos de Serviço{% endblock %}
+{% block nav_tipos_servicos %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/tipos_servico.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="tipos-servico-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-screwdriver-wrench"></i> Tipos de Serviço</h1>
+            <p>Gerencie os serviços que podem ser vinculados aos equipamentos</p>
+        </div>
+        <div class="header-right">
+            <button type="button" class="btn btn-primary" onclick="abrirModalCriar()">
+                <i class="fa-solid fa-plus"></i> Novo Tipo
+            </button>
+        </div>
+    </div>
+
+    <div class="tipo-summary">
+        <div class="summary-card">
+            <span class="summary-label">Tipos</span>
+            <strong id="summaryTotal">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Ativos</span>
+            <strong id="summaryAtivos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Inativos</span>
+            <strong id="summaryInativos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Configurações</span>
+            <strong id="summaryConfiguracoes">0</strong>
+        </div>
+    </div>
+
+    <div class="list-controls">
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search"></i>
+                <input
+                    type="text"
+                    id="searchTipoServico"
+                    class="search-input"
+                    placeholder="Pesquisar por tipo de serviço ou descrição..."
+                >
+                <button type="button" id="clearSearch" class="clear-search" style="display: none;" title="Limpar busca">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-circle"></i>
+                <select id="filtroStatus" class="filter-select">
+                    <option value="">Todos os status</option>
+                    <option value="ativo">Ativos</option>
+                    <option value="inativo">Inativos</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="tipos-servico-table" id="tiposServicoTable">
+            <thead>
+                <tr>
+                    <th class="col-nome">
+                        Tipo de Serviço
+                        <i class="fa-solid fa-arrow-up sort-icon" data-sort="asc"></i>
+                    </th>
+                    <th class="col-descricao">Descrição</th>
+                    <th class="col-configuracoes">Configurações</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-data">Criado em</th>
+                    <th class="col-actions">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tiposServicoTableBody">
+                <!-- Preenchido via JavaScript -->
+            </tbody>
+        </table>
+
+        <div id="loading" class="loading" style="display: none;">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Carregando tipos de serviço...</p>
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <i class="fa-solid fa-folder-open"></i>
+            <p>Nenhum tipo de serviço encontrado</p>
+            <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalCriar()">
+                Criar primeiro tipo de serviço
+            </button>
+        </div>
+    </div>
+
+    <div class="pagination-container" id="pagination">
+        <div class="rows-per-page">
+            <label for="rowsPerPage">Linhas por página:</label>
+            <select id="rowsPerPage">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <div class="pagination-controls" id="paginationControls"></div>
+    </div>
+</div>
+
+<!-- Modal Criar/Editar Tipo de Serviço -->
+<div id="tipoServicoModal" class="modal">
+    <div class="modal-content modal-large">
+        <form id="tipoServicoForm">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">
+                    <i class="fa-solid fa-plus"></i> Novo Tipo de Serviço
+                </h2>
+                <button type="button" class="modal-close close" title="Fechar">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="tipoServicoId" name="tipoServicoId">
+
+                <div class="form-group">
+                    <label for="nome" class="form-label">Nome do Tipo de Serviço *</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        class="form-control"
+                        placeholder="Ex: Manutenção, Inspeção, Recarga"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <textarea
+                        id="descricao"
+                        name="descricao"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Descreva quando este serviço deve ser utilizado..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="form-label">Status</label>
+                    <select id="status" name="status" class="form-control">
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+
+                <div id="formFeedback" class="form-feedback" role="alert"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-save"></i> Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Excluir Tipo de Serviço -->
+<div id="excluirModal" class="modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h2><i class="fa-solid fa-trash"></i> Excluir Tipo de Serviço</h2>
+            <button type="button" class="modal-close close" title="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja excluir o tipo de serviço <strong id="excluirNome"></strong>?</p>
+            <p class="text-warning">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+                Esta ação não poderá ser desfeita.
+            </p>
+            <div class="form-actions">
+                <button type="button" onclick="confirmarExcluir()" class="btn btn-danger">
+                    Excluir
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="fecharModalExcluir()">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/tipos_servico.js' %}?v=20260617-permissoes"></script>
+{% endblock %}

@@ -1,0 +1,546 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ equipamento.nome }} — Detalhe{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/detalhe_equipamento.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="detalhe-page">
+
+  <!-- ===== TOP BAR ===== -->
+  <div class="detalhe-topbar">
+    <div class="topbar-left">
+      <a href="{% url 'equipamentos' %}" class="back-btn" title="Voltar">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+      <div class="equip-avatar">
+        {% if equipamento.foto %}
+          <img src="{{ equipamento.foto.url }}" alt="{{ equipamento.nome }}">
+        {% else %}
+          <i class="fa-solid fa-fire-extinguisher"></i>
+        {% endif %}
+      </div>
+      <div class="topbar-info">
+        <h1 class="topbar-title">{{ equipamento.nome }}</h1>
+        <span class="topbar-badge {% if equipamento.ativo %}badge-ativo{% else %}badge-inativo{% endif %}">
+          <i class="fa-solid fa-circle"></i>
+          {% if equipamento.ativo %}Ativo{% else %}Inativo{% endif %}
+        </span>
+      </div>
+    </div>
+    {% if request.user.is_superuser or request.user.is_staff %}
+    <div class="topbar-right">
+      <button class="btn btn-danger-outline btn-sm" onclick="openModal('inativarModal')">
+        {% if equipamento.ativo %}Inativar Equipamento{% else %}Ativar Equipamento{% endif %}
+      </button>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="detalhe-summary">
+    <div class="summary-item">
+      <span class="summary-label">Prédio</span>
+      <strong>{{ equipamento.predio|default:"Não informado" }}</strong>
+    </div>
+    <div class="summary-item">
+      <span class="summary-label">Tipo</span>
+      <strong>{% if equipamento.tipo_equipamento %}{{ equipamento.tipo_equipamento.nome }}{% else %}Sem tipo{% endif %}</strong>
+    </div>
+    <div class="summary-item">
+      <span class="summary-label">Vistorias</span>
+      <strong>{{ total_servicos }}</strong>
+    </div>
+    <div class="summary-item">
+      <span class="summary-label">Última vistoria</span>
+      <strong>{% if ultima_vistoria %}{{ ultima_vistoria.criado_em|date:"d/m/Y" }}{% else %}Nenhuma{% endif %}</strong>
+    </div>
+  </div>
+
+  <!-- ===== TABS ===== -->
+  <div class="detalhe-tabs">
+    <button class="tab-btn active" data-tab="tab-equipamento">
+      <i class="fa-solid fa-microchip"></i> Equipamento
+    </button>
+    <button class="tab-btn" data-tab="tab-servicos">
+      <i class="fa-solid fa-clipboard-list"></i> Serviços
+    </button>
+  </div>
+
+  <!-- ===== TAB CONTENT ===== -->
+  <div class="detalhe-body">
+
+    <!-- TAB: EQUIPAMENTO -->
+    <div class="tab-panel active" id="tab-equipamento">
+
+      <div class="eq-layout">
+
+        <!-- Coluna principal -->
+        <div class="eq-main">
+
+          <!-- Card info -->
+          <div class="eq-card">
+            <div class="eq-card-header">
+              <span><i class="fa-solid fa-info-circle"></i> Infos do Equipamento</span>
+              {% if request.user.is_superuser or request.user.is_staff %}
+              <div style="display:flex;gap:6px;">
+                <button class="icon-btn" onclick="openModal('editarModal')" title="Editar">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="icon-btn icon-btn-danger" onclick="openModal('excluirModal')" title="Excluir">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+              {% endif %}
+            </div>
+            <div class="eq-card-body">
+
+              <!-- Foto do equipamento -->
+              <div class="equip-foto-wrapper">
+                {% if equipamento.foto %}
+                  <img src="{{ equipamento.foto.url }}" alt="{{ equipamento.nome }}" class="equip-foto" onclick="openFotoModal('{{ equipamento.foto.url }}')">
+                {% else %}
+                  <div class="equip-foto-placeholder">
+                    <i class="fa-solid fa-image"></i>
+                    <span>Sem foto</span>
+                  </div>
+                {% endif %}
+                {% if request.user.is_superuser or request.user.is_staff %}
+                <div class="foto-actions">
+                  <button class="btn btn-sm btn-outline" onclick="document.getElementById('fotoInput').click()">
+                    <i class="fa-solid fa-camera"></i> {% if equipamento.foto %}Trocar foto{% else %}Adicionar foto{% endif %}
+                  </button>
+                  <input type="file" id="fotoInput" accept="image/*" style="display:none" onchange="uploadFoto(this)">
+                </div>
+                {% endif %}
+
+                <!-- QR Code -->
+                {% if equipamento.qr_code %}
+                <div class="qr-wrapper">
+                  <img src="{{ equipamento.qr_code.url }}" alt="QR Code" class="qr-img" onclick="openFotoModal('{{ equipamento.qr_code.url }}')">
+                  <button class="btn btn-sm btn-outline" onclick="imprimirQRCode('{{ equipamento.qr_code.url }}')">
+                    <i class="fa-solid fa-print"></i> Imprimir QR
+                  </button>
+                </div>
+                {% else %}
+                <div class="qr-wrapper">
+                  <div class="qr-placeholder"><i class="fa-solid fa-qrcode"></i></div>
+                  <span style="font-size:11px;color:var(--texto-suave)">QR Code não gerado</span>
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Campos -->
+              <div class="fields-grid">
+                <div class="field-group">
+                  <label class="field-label">Prédio</label>
+                  <div class="field-value">{{ equipamento.predio|default:"—" }}</div>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Tipo de Equipamento</label>
+                  <div class="field-value">{% if equipamento.tipo_equipamento %}{{ equipamento.tipo_equipamento.nome }}{% else %}—{% endif %}</div>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Número de Série</label>
+                  <div class="field-value">{% if equipamento.numero_serie %}{{ equipamento.numero_serie }}{% elif equipamento.numero_extintor %}{{ equipamento.numero_extintor }}{% else %}—{% endif %}</div>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Departamento</label>
+                  <div class="field-value">{{ equipamento.departamento|default:"—" }}</div>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Grupo</label>
+                  <div class="field-value">{{ equipamento.grupo|default:"—" }}</div>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Data de Fabricação</label>
+                  <div class="field-value">{{ equipamento.data_fabricacao|default:"—" }}</div>
+                </div>
+                {% if equipamento.possui_vencimento %}
+                  {% if equipamento.vencimento_carga or equipamento.vencimento_teste_hidrostatico %}
+                  <div class="field-group">
+                    <label class="field-label">Vencimento da carga</label>
+                    <div class="field-value">{{ equipamento.vencimento_carga|default:"—" }}</div>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Teste hidrostático do casco</label>
+                    <div class="field-value">{{ equipamento.vencimento_teste_hidrostatico|default:"—" }}</div>
+                  </div>
+                  {% else %}
+                  <div class="field-group">
+                    <label class="field-label">Vencimento</label>
+                    <div class="field-value">{{ equipamento.data_vencimento|default:"—" }}</div>
+                  </div>
+                  {% endif %}
+                {% else %}
+                <div class="field-group">
+                  <label class="field-label">Vencimento</label>
+                  <div class="field-value">Não possui vencimento</div>
+                </div>
+                {% endif %}
+                <div class="field-group">
+                  <label class="field-label">Marca</label>
+                  <div class="field-value">{{ equipamento.marca|default:"—" }}</div>
+                </div>
+                <div class="field-group full-width">
+                  <label class="field-label">Descrição</label>
+                  <div class="field-value">{{ equipamento.descricao|default:"—" }}</div>
+                </div>
+                <div class="field-group full-width">
+                  <label class="field-label">Ponto de Referência</label>
+                  <div class="field-value">{{ equipamento.ponto_referencia|default:"—" }}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB: SERVIÇOS -->
+    <div class="tab-panel" id="tab-servicos">
+
+      <div class="servicos-header-bar">
+        <div class="servicos-header-left">
+          <h3><i class="fa-solid fa-clipboard-list"></i> Serviços e Vistorias</h3>
+          <p>Últimos checklists realizados e próximos vencimentos deste equipamento</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          {% if request.user.is_superuser or request.user.is_staff %}
+          <button class="btn btn-sm btn-outline" onclick="gerarRelatorioServicos()">
+            <i class="fa-solid fa-file-arrow-down"></i> Gerar Relatório
+          </button>
+          {% endif %}
+          {% if request.user.is_superuser or request.user.is_staff %}
+          <button class="btn btn-sm btn-primary" onclick="novoServico()">
+            <i class="fa-solid fa-plus"></i> Novo Serviço
+          </button>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Tipos de serviço (próximas vistorias) -->
+      <div class="proximas-vistorias" id="proximasVistorias">
+        {% for config in servicos_config %}
+        <div class="vistoria-card {% if config.vencido %}vistoria-vencida{% elif config.proximo %}vistoria-proxima{% endif %}">
+          <div class="vistoria-card-left">
+            <div class="vistoria-nome">{{ config.tipo_servico }}</div>
+            <div class="vistoria-meta">
+              <span class="tag-checklist" onclick="verChecklist({{ config.id }})">checklist</span>
+              {% if config.obrigatorio %}<span class="tag-obrigatorio">Obrigatório</span>{% endif %}
+              {% if config.vencimento %}
+              <span class="vistoria-venc">
+                Vencimento: {{ config.vencimento_formatado }} 
+                {% if config.dias_restantes is not None %}
+                  ({% if config.dias_restantes >= 0 %}{{ config.dias_restantes }} dias restante{% else %}{{ config.dias_restantes_abs }} dias atraso{% endif %})
+                {% endif %}
+              </span>
+              {% elif config.periodicidade and config.periodicidade.por_demanda %}
+              <span class="vistoria-venc">Por demanda</span>
+              {% endif %}
+              <span class="vistoria-venc">{{ config.checklist_total }} itens no checklist</span>
+            </div>
+          </div>
+          <div class="vistoria-card-right">
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <button class="btn btn-sm btn-primary" onclick="agendarServico({{ config.tipo_servico.id }})">
+              <i class="fa-solid fa-calendar-plus"></i> Agendar
+            </button>
+            {% endif %}
+            {% if config.ultimo_servico %}
+            <span class="last-service-pill">
+              <i class="fa-solid fa-circle-check"></i> {{ config.ultimo_servico.criado_em|date:"d/m/Y" }}
+            </span>
+            {% endif %}
+          </div>
+        </div>
+        {% empty %}
+        <div class="empty-servicos">
+          <i class="fa-solid fa-clipboard-list"></i>
+          <p>Nenhum tipo de serviço configurado para este equipamento</p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Abas serviços realizados / rascunhos -->
+      <div class="servicos-subtabs">
+        <div class="subtab-bar">
+          <button class="subtab-btn active" data-subtab="realizados">Serviços Realizados</button>
+          <button class="subtab-btn" data-subtab="rascunhos">Rascunhos</button>
+        </div>
+      </div>
+
+      <!-- Filtro por tipo -->
+      <div class="servico-filtros" id="servicoFiltros">
+        <button class="filtro-tipo-btn active"
+                data-tipo="todos"
+                onclick="filtrarServicos('todos', this)">
+          Todos
+        </button>
+        {% for config in servicos_config %}
+        <button class="filtro-tipo-btn" 
+                data-tipo="{{ config.tipo_servico }}"
+                onclick="filtrarServicos('{{ config.tipo_servico }}', this)">
+          {{ config.tipo_servico }}
+        </button>
+        {% endfor %}
+      </div>
+
+      <!-- Timeline de serviços realizados -->
+      <div class="servicos-timeline" id="servicosTimeline">
+        <div class="timeline-loading">
+          <i class="fa-solid fa-spinner fa-spin"></i> Carregando serviços...
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB: AÇÕES -->
+    <div class="tab-panel" id="tab-acoes">
+      <div class="empty-tab">
+        <i class="fa-solid fa-bolt"></i>
+        <h3>Ações do Equipamento</h3>
+        <p>Nenhuma ação registrada</p>
+        {% if request.user.is_superuser or request.user.is_staff %}
+        <button class="btn btn-primary" onclick="openModal('novaAcaoModal')">
+          <i class="fa-solid fa-plus"></i> Nova Ação
+        </button>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- TAB: TIMELINE -->
+    <div class="tab-panel" id="tab-timeline">
+      <div class="empty-tab">
+        <i class="fa-solid fa-timeline"></i>
+        <h3>Timeline do Equipamento</h3>
+        <p>Histórico de eventos do equipamento</p>
+      </div>
+    </div>
+
+    <!-- TAB: ANEXOS -->
+    <div class="tab-panel" id="tab-anexos">
+      <div class="anexos-header">
+        <h3><i class="fa-solid fa-paperclip"></i> Anexos</h3>
+        {% if request.user.is_superuser or request.user.is_staff %}
+        <button class="btn btn-sm btn-primary" onclick="document.getElementById('anexoInput').click()">
+          <i class="fa-solid fa-plus"></i> Adicionar Anexo
+        </button>
+        <input type="file" id="anexoInput" multiple style="display:none" onchange="uploadAnexo(this)">
+        {% endif %}
+      </div>
+      <div class="empty-tab" style="padding:40px 0">
+        <i class="fa-solid fa-folder-open"></i>
+        <p>Nenhum anexo adicionado</p>
+      </div>
+    </div>
+
+    <!-- TAB: LOGS -->
+    <div class="tab-panel" id="tab-logs">
+      <div class="empty-tab">
+        <i class="fa-solid fa-scroll"></i>
+        <h3>Logs do Equipamento</h3>
+        <p>Registro de alterações e atividades</p>
+      </div>
+    </div>
+
+    <!-- TAB: MANUTENÇÃO -->
+    <div class="tab-panel" id="tab-manutencao">
+      <div class="empty-tab">
+        <i class="fa-solid fa-wrench"></i>
+        <h3>Manutenção</h3>
+        <p>Registros de manutenção do equipamento</p>
+        {% if request.user.is_superuser or request.user.is_staff %}
+        <button class="btn btn-primary" onclick="openModal('novaManutencaoModal')">
+          <i class="fa-solid fa-plus"></i> Registrar Manutenção
+        </button>
+        {% endif %}
+      </div>
+    </div>
+
+  </div><!-- end detalhe-body -->
+</div><!-- end detalhe-page -->
+
+
+<!-- ======================================================= -->
+<!-- MODAL: INATIVAR/ATIVAR -->
+<!-- ======================================================= -->
+{% if request.user.is_superuser or request.user.is_staff %}
+<div id="inativarModal" class="modal-overlay">
+  <div class="modal-box modal-sm">
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <i class="fa-solid fa-power-off"></i>
+        {% if equipamento.ativo %}Inativar Equipamento{% else %}Ativar Equipamento{% endif %}
+      </h2>
+      <button class="modal-close" onclick="closeModal('inativarModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="confirm-msg">
+        <i class="fa-solid fa-triangle-exclamation" style="color:var(--laranja-nothfire);font-size:32px;display:block;margin-bottom:12px;"></i>
+        Tem certeza que deseja <strong>{% if equipamento.ativo %}inativar{% else %}ativar{% endif %}</strong> o equipamento
+        <strong>{{ equipamento.nome }}</strong>?
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('inativarModal')">Cancelar</button>
+      <button class="btn btn-danger" onclick="toggleAtivo()">
+        <i class="fa-solid fa-power-off"></i>
+        {% if equipamento.ativo %}Inativar{% else %}Ativar{% endif %}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- MODAL: EDITAR EQUIPAMENTO -->
+<!-- ======================================================= -->
+<div id="editarModal" class="modal-overlay">
+  <div class="modal-box modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-title"><i class="fa-solid fa-pen"></i> Editar Equipamento</h2>
+      <button class="modal-close" onclick="closeModal('editarModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Prédio</label>
+          <select class="form-control" id="editPredio">
+            <option value="">Selecione...</option>
+            {% for predio in predios %}
+            <option value="{{ predio.id }}" {% if equipamento.predio_id == predio.id %}selected{% endif %}>{{ predio.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo de Equipamento *</label>
+          <select class="form-control" id="editTipoEquipamento">
+            <option value="">Selecione...</option>
+            {% for tipo in tipos_equipamento %}
+            <option value="{{ tipo.id }}" {% if equipamento.tipo_equipamento_id == tipo.id %}selected{% endif %}>{{ tipo.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Departamento</label>
+          <select class="form-control" id="editDepartamento">
+            <option value="">Selecione...</option>
+            {% for departamento in departamentos %}
+            <option value="{{ departamento.id }}" {% if equipamento.departamento_id == departamento.id %}selected{% endif %}>{{ departamento.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Número de Série</label>
+          <input class="form-control" id="editNumeroSerie" value="{% if equipamento.numero_serie %}{{ equipamento.numero_serie }}{% else %}{{ equipamento.numero_extintor|default:'' }}{% endif %}">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Data de Fabricação</label>
+          <input type="date" class="form-control" id="editDataFabricacao" value="{{ equipamento.data_fabricacao|date:'Y-m-d' }}">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Marca</label>
+          <input class="form-control" id="editMarca" value="{{ equipamento.marca|default:'' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Descrição</label>
+          <input class="form-control" id="editDescricao" value="{{ equipamento.descricao|default:'' }}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ponto de Referência</label>
+        <input class="form-control" id="editPontoReferencia" value="{{ equipamento.ponto_referencia|default:'' }}">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('editarModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarEdicao()">
+        <i class="fa-solid fa-save"></i> Salvar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- MODAL: EXCLUIR -->
+<!-- ======================================================= -->
+<div id="excluirModal" class="modal-overlay">
+  <div class="modal-box modal-sm">
+    <div class="modal-header">
+      <h2 class="modal-title"><i class="fa-solid fa-trash"></i> Excluir Equipamento</h2>
+      <button class="modal-close" onclick="closeModal('excluirModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="confirm-msg">
+        <i class="fa-solid fa-triangle-exclamation" style="color:#dc3545;font-size:32px;display:block;margin-bottom:12px;"></i>
+        Esta ação é <strong>irreversível</strong>. Todos os dados do equipamento
+        <strong>{{ equipamento.nome }}</strong> serão permanentemente excluídos.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('excluirModal')">Cancelar</button>
+      <button class="btn btn-danger" onclick="excluirEquipamento()">
+        <i class="fa-solid fa-trash"></i> Excluir Permanentemente
+      </button>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ======================================================= -->
+<!-- MODAL: DETALHE DO SERVIÇO REALIZADO -->
+<!-- ======================================================= -->
+<div id="servicoDetalheModal" class="modal-overlay">
+  <div class="modal-box modal-lg">
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-title" id="servicoDetalheTitle"><i class="fa-solid fa-clipboard-check"></i> Serviço Realizado</h2>
+        <p id="servicoDetalheSubtitle" style="font-size:12px;color:var(--texto-suave);margin-top:3px;"></p>
+      </div>
+      <button class="modal-close" onclick="closeModal('servicoDetalheModal')">&times;</button>
+    </div>
+    <div class="modal-body" id="servicoDetalheBody">
+      <div class="loading-spinner">
+        <i class="fa-solid fa-spinner fa-spin"></i> Carregando...
+      </div>
+    </div>
+    <div class="modal-footer servico-detalhe-footer">
+      <a id="servicoRelatorioBtn" class="btn btn-primary btn-sm" href="#" target="_blank" rel="noopener">
+        <i class="fa-solid fa-file-pdf"></i> Gerar relatório
+      </a>
+      <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('servicoDetalheModal')">
+        Fechar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- MODAL: FOTO AMPLIADA -->
+<!-- ======================================================= -->
+<div id="fotoModal" class="modal-overlay foto-modal-overlay" onclick="closeModal('fotoModal')">
+  <div class="foto-modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close foto-close" onclick="closeModal('fotoModal')">&times;</button>
+    <img id="fotoModalImg" src="" alt="Foto ampliada">
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const EQUIPAMENTO_ID = {{ equipamento.id }};
+  const CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+	<script src="{% static 'core/js/detalhe_equipamento.js' %}?v=20260617-permissoes"></script>
+{% endblock %}

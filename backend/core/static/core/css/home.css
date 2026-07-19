@@ -1,0 +1,206 @@
+:root {
+    --azul-nothfire: #1a3a5a;
+    --laranja-nothfire: #e65100;
+    --cinza-fundo: #f4f7f6;
+    --branco: #ffffff;
+    --texto-suave: #555;
+    --sidebar-largura: 260px;
+}
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--cinza-fundo);
+    height: 100%;
+}
+
+/* WRAPPER */
+.wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* =====================
+   SIDEBAR
+===================== */
+.sidebar {
+    width: var(--sidebar-largura);
+    background: var(--branco);
+    border-right: 1px solid #ddd;
+    transition: all 0.3s ease;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.sidebar.closed {
+    width: 0;
+    border: none;
+}
+
+/* HEADER SIDEBAR */
+.sidebar-header {
+    padding: 20px;
+    font-weight: bold;
+    color: var(--azul-nothfire);
+    border-bottom: 1px solid #eee;
+    min-width: var(--sidebar-largura);
+}
+
+/* SEÇÃO */
+.menu-section {
+    padding: 20px;
+    font-size: 0.75rem;
+    color: #bbb;
+    text-transform: uppercase;
+}
+
+/* ITENS */
+.nav-item {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--texto-suave);
+    text-decoration: none;
+    min-width: var(--sidebar-largura);
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+    background: #f0f4f8;
+    color: var(--laranja-nothfire);
+    border-left: 3px solid var(--laranja-nothfire);
+}
+
+.nav-item i {
+    width: 20px;
+    text-align: center;
+}
+
+/* =====================
+   NAVBAR
+===================== */
+.navbar {
+    height: 60px;
+    background: var(--azul-nothfire);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    color: white;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.brand-name {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* BOTÃO MENU */
+.toggle-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.toggle-btn:hover {
+    background: var(--laranja-nothfire);
+    transform: scale(1.05);
+}
+
+/* =====================
+   CONTEÚDO
+===================== */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-body {
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* TITULOS */
+.dashboard-body h2 {
+    color: var(--azul-nothfire);
+    margin-bottom: 10px;
+}
+
+.dashboard-body p {
+    color: var(--texto-suave);
+    line-height: 1.5;
+}
+
+/* =====================
+   BOTÕES
+===================== */
+.admin-btn,
+.logout-btn {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    background: var(--azul-nothfire);
+    margin-right: 10px;
+    transition: 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.admin-btn:hover,
+.logout-btn:hover {
+    background: var(--laranja-nothfire);
+    transform: translateY(-2px);
+}
+
+/* =====================
+   PERFIL
+===================== */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-info {
+    text-align: right;
+    font-size: 0.8rem;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid var(--laranja-nothfire);
+    object-fit: cover;
+    transition: 0.3s;
+}
+
+.user-avatar:hover {
+    transform: scale(1.1);  
+}

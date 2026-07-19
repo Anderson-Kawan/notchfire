@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home - NothFire{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block content %}
+    <h2>Bem-vindo ao Sistema!</h2>
+    <p>O menu lateral está ativo. Clique na seta para recolher.</p>
+
+    {% if request.user.is_superuser %}
+    <p style="margin-top: 15px;">
+        Você está logado como <strong>superusuário</strong>.
+    </p>
+    {% else %}
+    <p style="margin-top: 15px;">
+        Você está logado como <strong>usuário comum</strong>.
+    </p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,369 @@
+/* checklist.css */
+
+.checklist-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header */
+.checklist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--laranja-nothfire);
+}
+
+.checklist-header h1 {
+    color: var(--azul-nothfire);
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+.checklist-header h1 i {
+    color: var(--laranja-nothfire);
+    margin-right: 10px;
+}
+
+.checklist-header p {
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+}
+
+/* Info Card */
+.info-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--azul-nothfire);
+}
+
+.info-value {
+    color: var(--texto-suave);
+}
+
+/* Checklist Items */
+.checklist-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.checklist-item {
+    background: var(--branco);
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.checklist-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.item-header {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background: #fafbfc;
+    border-bottom: 1px solid #eee;
+}
+
+.item-number {
+    width: 40px;
+    height: 40px;
+    background: var(--azul-nothfire);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.item-pergunta {
+    flex: 1;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.required-badge {
+    background: #dc3545;
+    color: white;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 10px;
+    font-weight: normal;
+}
+
+.item-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.item-details {
+    padding: 15px 20px;
+    background: white;
+}
+
+.detail-row {
+    margin-bottom: 8px;
+    display: flex;
+    gap: 10px;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: var(--azul-nothfire);
+    min-width: 120px;
+}
+
+.detail-value {
+    color: var(--texto-suave);
+}
+
+.checklist-response-preview {
+    align-items: center;
+    background: #fbfcfd;
+    border: 1px solid #e6ebf0;
+    border-radius: 8px;
+    display: flex;
+    gap: 14px;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+}
+
+.checklist-response-preview p {
+    color: var(--azul-nothfire);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.45;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+}
+
+.response-options-preview {
+    align-items: center;
+    color: var(--texto-suave);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 13px;
+    gap: 12px;
+}
+
+.response-options-preview span {
+    align-items: center;
+    display: inline-flex;
+    gap: 6px;
+}
+
+.answer-radio {
+    border: 2px solid #b9c1ca;
+    border-radius: 50%;
+    display: inline-block;
+    height: 14px;
+    position: relative;
+    width: 14px;
+}
+
+.answer-radio.checked {
+    border-color: #1a7a3c;
+}
+
+.answer-radio.checked::after {
+    background: #1a7a3c;
+    border-radius: 50%;
+    content: "";
+    height: 6px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+}
+
+.answer-field-preview {
+    background: #f8f9fb;
+    border: 1px dashed #d7dde5;
+    border-radius: 8px;
+    color: var(--texto-suave);
+    font-weight: 700;
+    padding: 8px 10px;
+}
+
+.btn-add-action-preview {
+    background: #fff;
+    border: 1px solid #d7dde5;
+    border-radius: 6px;
+    color: #9aa4b2;
+    cursor: not-allowed;
+    font-size: 11px;
+    font-weight: 800;
+    min-height: 30px;
+    padding: 7px 12px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.checklist-modal-preview {
+    background: linear-gradient(180deg, #fff, #fbfcfd);
+    border: 1px solid #e6ebf0;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    margin: 4px 0 18px;
+    padding: 12px;
+}
+
+.preview-title {
+    align-items: center;
+    color: var(--azul-nothfire);
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.preview-title span {
+    align-items: center;
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 800;
+    gap: 6px;
+    text-transform: uppercase;
+}
+
+.preview-title i {
+    color: var(--laranja-nothfire);
+}
+
+.preview-title strong {
+    background: #fff3eb;
+    border-radius: 999px;
+    color: var(--laranja-nothfire);
+    font-size: 11px;
+    padding: 5px 9px;
+}
+
+.modal-preview-row {
+    margin-bottom: 0;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--texto-suave);
+}
+
+.empty-state i {
+    font-size: 64px;
+    margin-bottom: 20px;
+    color: #ccc;
+}
+
+/* Image Preview */
+.image-preview {
+    margin-top: 10px;
+}
+
+.image-preview img {
+    max-width: 200px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+/* Modal Large */
+.modal-large {
+    max-width: 700px;
+}
+
+.checklist-toast {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 9999;
+    max-width: min(360px, calc(100vw - 32px));
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 14px 38px rgba(15, 23, 42, 0.2);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.checklist-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.checklist-toast.toast-success {
+    background: #16803c;
+}
+
+.checklist-toast.toast-error {
+    background: #c92a2a;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .checklist-container {
+        padding: 10px;
+    }
+    
+    .checklist-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .item-header {
+        flex-wrap: wrap;
+    }
+    
+    .item-number {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+    
+    .item-pergunta {
+        font-size: 14px;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .detail-label {
+        min-width: auto;
+    }
+
+    .checklist-response-preview {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

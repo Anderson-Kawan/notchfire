@@ -1,0 +1,233 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}NotchFire - Tipos de Equipamento{% endblock %}
+
+{% block nav_tipos_equipamentos %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/tipos_equipamento.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="tipos-equipamento-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-microchip"></i> Tipos de Equipamento</h1>
+            <p>Gerencie os tipos de equipamento e seus checklists do sistema.</p>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" onclick="abrirModalCriar()">
+                <i class="fa-solid fa-plus"></i> Novo Tipo de Equipamento
+            </button>
+        </div>
+    </div>
+
+    <div class="tipo-summary">
+        <div class="summary-card">
+            <span class="summary-label">Tipos</span>
+            <strong id="summaryTotal">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Ativos</span>
+            <strong id="summaryAtivos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Inativos</span>
+            <strong id="summaryInativos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Grupos</span>
+            <strong id="summaryGrupos">0</strong>
+        </div>
+    </div>
+
+    <div class="list-controls">
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search"></i>
+                <input
+                    type="text"
+                    id="searchTipoEquipamento"
+                    class="search-input"
+                    placeholder="Pesquisar por tipo, grupo ou periodicidade..."
+                >
+                <button id="clearSearch" class="clear-search" style="display: none;" title="Limpar busca">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-layer-group"></i>
+                <select id="filtroGrupo" class="filter-select">
+                    <option value="">Todos os Grupos</option>
+                </select>
+            </div>
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-circle"></i>
+                <select id="filtroStatus" class="filter-select">
+                    <option value="">Todos os Status</option>
+                    <option value="ativo">Ativos</option>
+                    <option value="inativo">Inativos</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="tipos-equipamento-table" id="tiposEquipamentoTable">
+            <thead>
+                <tr>
+                    <th class="col-actions">Ações</th>
+                    <th class="col-nome">
+                        Tipo de Equipamento
+                        <i class="fa-solid fa-arrow-up sort-icon" data-sort="asc"></i>
+                    </th>
+                    <th class="col-grupo">Grupo</th>
+                    <th class="col-periodicidade">Periodicidade</th>
+                    <th class="col-descricao">Descrição</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-data">Criado em</th>
+                </tr>
+            </thead>
+            <tbody id="tiposEquipamentoTableBody"></tbody>
+        </table>
+
+        <div id="loading" class="loading" style="display: none;">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Carregando tipos de equipamento...</p>
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <i class="fa-solid fa-folder-open"></i>
+            <p>Nenhum tipo de equipamento encontrado</p>
+            <button class="btn btn-primary btn-sm" onclick="abrirModalCriar()">
+                Criar primeiro tipo de equipamento
+            </button>
+        </div>
+    </div>
+
+    <div class="pagination-container" id="pagination">
+        <div class="rows-per-page">
+            <label>Linhas por página:</label>
+            <select id="rowsPerPage">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <div class="pagination-controls" id="paginationControls"></div>
+    </div>
+</div>
+
+<!-- Modal Criar/Editar Tipo de Equipamento -->
+<div id="tipoEquipamentoModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle"><i class="fa-solid fa-plus"></i> Cadastro de Novo Tipo de Equipamento</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="tipoEquipamentoForm">
+                <input type="hidden" id="tipoEquipamentoId" name="tipoEquipamentoId">
+
+                <div class="form-group">
+                    <label for="nome">
+                        <i class="fa-solid fa-tag"></i> Tipo de Equipamento <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        class="form-control"
+                        placeholder="Ex: Extintor ABC, Mangueira, Sirene"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="grupo">
+                        <i class="fa-solid fa-layer-group"></i> Grupo <span class="required">*</span>
+                    </label>
+                    <select id="grupo" name="grupo" class="form-control" required>
+                        <option value="">Selecione um grupo...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="periodicidade">
+                        <i class="fa-solid fa-clock"></i> Periodicidade <span class="required">*</span>
+                    </label>
+                    <select id="periodicidade" name="periodicidade" class="form-control" required>
+                        <option value="">Selecione uma periodicidade...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao">
+                        <i class="fa-solid fa-align-left"></i> Descrição do Tipo de Equipamento
+                    </label>
+                    <textarea
+                        id="descricao"
+                        name="descricao"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Descrição do tipo de equipamento..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">
+                        <i class="fa-solid fa-circle"></i> Status
+                    </label>
+                    <select id="status" name="status" class="form-control">
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-save"></i> Salvar
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal()">
+                        <i class="fa-solid fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Excluir Tipo de Equipamento -->
+<div id="excluirModal" class="modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h2><i class="fa-solid fa-trash"></i> Excluir Tipo de Equipamento</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja excluir o tipo de equipamento <strong id="excluirNome"></strong>?</p>
+            <p class="text-warning">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+                Esta ação não poderá ser desfeita.
+            </p>
+            <div class="form-actions">
+                <button type="button" onclick="confirmarExcluir()" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i> Excluir
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="fecharModalExcluir()">
+                    <i class="fa-solid fa-times"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/tipos_equipamento.js' %}?v=20260617-permissoes"></script>
+{% endblock %}

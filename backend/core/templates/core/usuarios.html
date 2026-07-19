@@ -1,0 +1,214 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Usuários - NotchFire{% endblock %}
+{% block nav_usuarios %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/usuarios.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="usuarios-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-users-gear"></i> Usuários</h1>
+            <p>Controle de acessos, convites e permissões do sistema</p>
+        </div>
+        <div class="header-right">
+            <button type="button" class="btn btn-secondary" id="exportarUsuarios">
+                <i class="fa-solid fa-file-export"></i> Exportar dados
+            </button>
+            <button type="button" class="btn btn-primary" id="abrirNovoUsuario">
+                <i class="fa-solid fa-plus"></i> Novo usuário
+            </button>
+        </div>
+    </div>
+
+    <div class="user-summary">
+        <div class="summary-card">
+            <span class="summary-label">Usuários</span>
+            <strong id="summaryTotal">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Ativos</span>
+            <strong id="summaryAtivos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Convites</span>
+            <strong id="summaryConvites">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Administradores</span>
+            <strong id="summaryAdmins">0</strong>
+        </div>
+    </div>
+
+    <div class="list-controls">
+        <div class="search-wrapper">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="searchUsuarios" class="search-input" placeholder="Pesquisar por nome, e-mail ou filtro...">
+            <button type="button" id="clearSearch" class="clear-search" title="Limpar busca">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="filter-bar">
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-shield-halved"></i>
+                <select id="filtroTipo" class="filter-select">
+                    <option value="">Todos os acessos</option>
+                    {% for valor, label in tipo_acesso_choices %}
+                    <option value="{{ valor }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-building"></i>
+                <select id="filtroPredio" class="filter-select">
+                    <option value="">Todos os prédios</option>
+                    {% for predio in predios %}
+                    <option value="{{ predio.id }}">{{ predio.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-tabs" aria-label="Filtro por status">
+        <button type="button" class="tab-btn active" data-status="">Todos</button>
+        <button type="button" class="tab-btn" data-status="ativo">Ativos</button>
+        <button type="button" class="tab-btn" data-status="pendente">Convites</button>
+        <button type="button" class="tab-btn" data-status="inativo">Inativos</button>
+    </div>
+
+    <div class="table-container">
+        <table class="usuarios-table" id="usuariosTable">
+            <thead>
+                <tr>
+                    <th class="col-user">
+                        Nome
+                        <button type="button" class="sort-btn" id="sortUsuarios" title="Ordenar">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </button>
+                    </th>
+                    <th>E-mail</th>
+                    <th>Tipo de acesso</th>
+                    <th>Prédio</th>
+                    <th>Status</th>
+                    <th>Último acesso</th>
+                </tr>
+            </thead>
+            <tbody id="usuariosTableBody"></tbody>
+        </table>
+
+        <div id="loading" class="loading">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Carregando usuários...</p>
+        </div>
+
+        <div id="noResults" class="no-results">
+            <i class="fa-solid fa-user-slash"></i>
+            <p>Nenhum usuário encontrado</p>
+        </div>
+    </div>
+
+    <div class="pagination-container" id="pagination">
+        <div class="rows-per-page">
+            <label for="rowsPerPage">Linhas por página:</label>
+            <select id="rowsPerPage">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <div class="pagination-controls" id="paginationControls"></div>
+    </div>
+</div>
+
+<div id="usuarioModal" class="user-modal" aria-hidden="true">
+    <div class="user-modal-panel" role="dialog" aria-modal="true" aria-labelledby="usuarioModalTitle">
+        <div class="modal-header">
+            <div>
+                <span class="modal-kicker">Acesso ao sistema</span>
+                <h2 id="usuarioModalTitle"><i class="fa-solid fa-user-plus"></i> Novo usuário</h2>
+            </div>
+            <button type="button" class="modal-close" id="fecharUsuarioModal" title="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form id="usuarioForm" class="usuario-form">
+            {% csrf_token %}
+            <div class="compact-form-grid">
+                <label class="photo-picker create-photo-picker">
+                    <input type="file" id="fotoUsuario" name="foto" accept="image/*">
+                    <span class="photo-preview" id="fotoUsuarioPreview">
+                        <span>US</span>
+                        <img src="" alt="">
+                    </span>
+                    <strong><i class="fa-solid fa-camera"></i> Foto opcional</strong>
+                </label>
+
+                <div class="form-group form-span-2">
+                    <label for="nomeUsuario">Nome inteiro</label>
+                    <input type="text" id="nomeUsuario" name="nome" autocomplete="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="usernameUsuario">Nome de login</label>
+                    <input type="text" id="usernameUsuario" name="username" autocomplete="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="emailUsuario">E-mail</label>
+                    <input type="email" id="emailUsuario" name="email" autocomplete="email" required>
+                </div>
+
+                <div class="form-group form-span-2" id="senhaUsuarioGroup">
+                    <label for="senhaUsuario" id="senhaUsuarioLabel">Senha</label>
+                    <input type="password" id="senhaUsuario" name="password" autocomplete="new-password" minlength="8" required>
+                </div>
+
+                <div class="form-group form-span-2">
+                    <label for="predioUsuario">Prédio</label>
+                    <select id="predioUsuario" name="predio_id" required>
+                        <option value="">Selecione um prédio...</option>
+                        {% for predio in predios %}
+                        <option value="{{ predio.id }}">{{ predio.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <input type="hidden" name="status" value="ativo">
+
+                <div class="form-group form-span-2">
+                    <label>Tipo de acesso</label>
+                    <div class="access-options">
+                        {% for valor, label in tipo_acesso_choices %}
+                        <label class="access-option">
+                            <input type="radio" name="tipo_acesso" value="{{ valor }}" {% if valor == 'analista' %}checked{% endif %}>
+                            <span>{{ label }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="formFeedback" class="form-feedback" role="alert"></div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancelarUsuario">Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="salvarUsuario">
+                    <i class="fa-solid fa-save"></i> Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/usuarios.js' %}?v=20260617-permissoes"></script>
+{% endblock %}

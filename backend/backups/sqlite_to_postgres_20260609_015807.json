@@ -1,0 +1,1345 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$AuL7pkFLVdVBKYKRswT1ib$98syUB01NcUXPk+okhK7sriTXwK0/1LrfPQttW26V44=",
+    "last_login": "2026-05-06T00:34:01.709Z",
+    "is_superuser": true,
+    "username": "anderson.proenca",
+    "first_name": "anderson.proenca",
+    "last_name": "",
+    "email": "anderson.proenca1020@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-21T21:23:05.889Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$312U5EUKU9ZhXvMEthIp3T$iyfd0CExovv5rYC7c2lijB/agF2wHwowVr8E4a2TXS8=",
+    "last_login": "2026-05-07T17:48:04.211Z",
+    "is_superuser": true,
+    "username": "kleberson",
+    "first_name": "Kleberson",
+    "last_name": "",
+    "email": "kleberson.santos@notchfire.com.br",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-01T15:54:20.534Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$RyCfsHU5usBAKgdrUqFM1u$oEaEp6PYRn5Tx9kAsCCqakkXYwe+R39gs0ku6Zl0tjM=",
+    "last_login": "2026-06-04T18:56:27.920Z",
+    "is_superuser": false,
+    "username": "teste",
+    "first_name": "Teste",
+    "last_name": "",
+    "email": "teste@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-01T16:00:48.054Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$bIGW1Zlqz4kQU0FPOYN5AK$KrZOZWqUPT2Js8rxx2oQC3E4AAHraxSikJei1G+Ru7g=",
+    "last_login": "2026-05-19T02:03:21.866Z",
+    "is_superuser": true,
+    "username": "anderson",
+    "first_name": "",
+    "last_name": "",
+    "email": "anderson.proenca1020@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-19T02:02:42.955Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Ew0JnuTmpVzQ0UtJllNUas$cXK/kGVOWf+by9w7DYgBopCSVGghUZsoc/bIGkia5xE=",
+    "last_login": "2026-06-06T19:50:08.500Z",
+    "is_superuser": true,
+    "username": "anderson.proenca1",
+    "first_name": "",
+    "last_name": "",
+    "email": "anderson.proenca@gmail.com.br",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-06-05T18:26:55.515Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "05xxqu8xef6zvs77zp8aqx1741gfietx",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHloi:0DqTk7VGVTXBHAscTuY_5SXuJ2eJdWDRCD4iEJdNT3A",
+    "expire_date": "2026-05-12T17:01:48.018Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "0l1peyh8igx19qfgcd84fjhs2wpie1pd",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHvW7:UuJbmc9fWeh-8cEOqzjrb1sb8wRwlqu_OEL-MGJa5ng",
+    "expire_date": "2026-05-13T03:23:15.524Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "1zp31yav5foyghnlxi9okc8ttadznv2y",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI6m3:PRdS6hhsGob2NeqVTbGev8T711wZO6_o_FqNiQ_9dME",
+    "expire_date": "2026-05-13T15:24:27.860Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "2fib9k23johqkv63mo4l0jgnz1nvl4zn",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI6l8:2baUr5FZCXXZ3mapnIq4WkyCm9p2_sv0HRmD5bpFf84",
+    "expire_date": "2026-05-13T15:23:30.745Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "2zr20phlg1pjxzvztv65k0u5dah9dijk",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI6cA:bWkHStDJ66IBWYrvfK546ncc9qbsowj0CJDjeTCTLbA",
+    "expire_date": "2026-05-13T15:14:14.344Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "3adzhepnpaptcklqwk8j2ofjzdooviul",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHudM:41lkdlMQqZraexwSypei6ixqVgULbO_T4JS7O6jUWTc",
+    "expire_date": "2026-05-13T02:26:40.538Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "4p8517so419j0tcjkfujeolvb4ent6ix",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI6xX:poc6QHbShMUijrkEKSwOfhNmr9Les4N_EXiLavMhRT0",
+    "expire_date": "2026-05-13T15:36:19.549Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "4scu65elnjaxlrgtic05mv96dhe61br6",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHudu:uo2gGfsES-jN-1pE-5Cy4vhHDyfnduzL_aDloppFOKo",
+    "expire_date": "2026-05-13T02:27:14.464Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "520plvo40gygkgsupbob3xeuzb6ikstv",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hDGGQq4dO8ZyDBQWzWQlHZlvLtp0oVu_3vvv1XkbZ3i1ssS56wuCkCdfsfE8ix1J_nB9d60tLouc9K7og_a9a3l8roe7t_BxH3a6zM4SpydE2QfRiCHgMYO1ooM3pEZjEdIhVgIk4wcAvLIQDmh9aw-X-6IN8c:1wP9nl:6P-Er1sn7ncQNCOJB8UuiuLzBHCKr_7zrRlR_NhFBcQ",
+    "expire_date": "2026-06-02T02:03:21.873Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "5oeq2tem2iuzdz572uuv1nkyqhov2gxo",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI7O3:xZXPuGe5OfwBJoBgvIT-gi0jiWC9hwOPOr7LA1Haytk",
+    "expire_date": "2026-05-13T16:03:43.057Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "5v32ghnp50pcu2o08ym5at2qzdy9fdzi",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wKQDB:NV8KItc15VdNs1fQU1vMOm0UUwBTL6reXBl0-Jz7PRo",
+    "expire_date": "2026-05-20T00:34:01.712Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "6icsjqpf77d2opxztb6v0crt90mrwqb7",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHvmy:8YK7LHlhMY0ziIQmeOLZbKwmYH1WqDwwKu9Ub93SDe0",
+    "expire_date": "2026-05-13T03:40:40.154Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "7faoslwj5wgky05hguiga3erditx4vz4",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHuue:cltWPJCBb2vY7aDIvesq-scdWs3Oqde8En5ws7vr24g",
+    "expire_date": "2026-05-13T02:44:32.652Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "7ltp6m6116ryqhfmsdzi54sfluf4ajm1",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI6xJ:SNxSBRqp57znPBPD_36YDwIkcNrdKOPJPsH8f1g4sA8",
+    "expire_date": "2026-05-13T15:36:05.497Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "7zjvezrzrcst6vq2yvce1jsyt2xsplc9",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHv8r:oyytiQsVYMABWqzxHA9WFSwY02hhlfukQCV0SdJumCg",
+    "expire_date": "2026-05-13T02:59:13.405Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "8oe2e0b9kazcshw0kpcc04i4kvh8g9li",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHuw4:hPq1UBicJLZc8DzjXZyBbwhgchdP30pFeZW6z4zefKs",
+    "expire_date": "2026-05-13T02:46:00.621Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "8tmj2wr79so9ca99xlxxlosc4tlz27ql",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHuuo:MkhR6z1zkUOUdVk17lj4vkYT_9oX7tyTv9o7wxR--Fk",
+    "expire_date": "2026-05-13T02:44:42.644Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "9mie6yd6q2yabd2k04lmyd8bwdnqitq6",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHueG:Pr2bY7fzT1TzM7AB52iRhbFC-dlQ27lAqgnaM_0fsz0",
+    "expire_date": "2026-05-13T02:27:36.378Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "9pw6krewj8x4glxm38dbpr0bsc42h16e",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHuUq:Tsn6FK8e_el_aHyq3cOOePaBew70Jr0k6RmjkzCL_Bo",
+    "expire_date": "2026-05-13T02:17:52.381Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "a592gv5qvnn6bd09sp6tr0pfvvy3yi0p",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHkm5:kln08frSfkpwK09kq5EQhZx9bGNHVzO-QHtOqcHT2AM",
+    "expire_date": "2026-05-12T15:55:01.730Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ajhi5d2bdgb6gawnby5h2f0hyzf3ukrj",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHvtv:KRvEI5nXpl6fSEushYGr9HfQ2Iz0nUqeVQ_QN9U9H7A",
+    "expire_date": "2026-05-13T03:47:51.302Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "c60ox78qmn1xg06qjs999g9y449a79u7",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHvfB:nl2pC0JdiQVQR4FReTbMDuMi2QQfbySufJdJol-85M4",
+    "expire_date": "2026-05-13T03:32:37.402Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "cialyb7gjfd2of7p9ieehxz0yrk6yc0s",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hAoMIBL956BMMxUqqYkpV0Z765NutDtf-_9l0h5W2vaOi9pInEWUZx-N8zlwfMO6J7nW5OlzesyodwVedAur434eTncv4Oae_3WA5AOcVBBeeuKYU0Rx0CAEQGsZjaWnHU8Ui5gtAHEAJnIeqWNj4N4fwDVrzeD:1wL2pQ:8JjFmrnWyjvs_y04Ab0oFqZwIFUVrhxf_kGIiY625k8",
+    "expire_date": "2026-05-21T17:48:04.249Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "cjg6cm10bvcvigcer7f1wkxd2zhlrow5",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHvU0:VLqSCoCafUUTcmgtK5f8ZGQvaKbbfI6jCb-PODvEz4s",
+    "expire_date": "2026-05-13T03:21:04.419Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "d2dnteu0tv62xwg7laz50h08qravlrdo",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hAoMIBL956BMMxUqqYkpV0Z765NutDtf-_9l0h5W2vaOi9pInEWUZx-N8zlwfMO6J7nW5OlzesyodwVedAur434eTncv4Oae_3WA5AOcVBBeeuKYU0Rx0CAEQGsZjaWnHU8Ui5gtAHEAJnIeqWNj4N4fwDVrzeD:1wJN6I:NLhKlAeO02X-kdurKUrupnBhIb4bwGvNkpSDcHM-T94",
+    "expire_date": "2026-05-17T03:02:34.866Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "e0bq62rxudgvkco76t2hht6yu87ikw0d",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHvNB:VAArz7WKK2CTOP2rgclBTjmT5TUwEKcXI0HdPWYvTs8",
+    "expire_date": "2026-05-13T03:14:01.098Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "fg4vlylwqyxlzt5tnspilxlbyrc8p6ax",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHkuA:sZ3E0OXgCqBxqn9jbKAUdUViUgsJa5fZ3VmLO8x9B2E",
+    "expire_date": "2026-05-12T16:03:22.744Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "gv8g9lwu7rx5eycus6h6r9icsnelrwuq",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHloY:H_s-vQ6HQDhb1041sC3RR0FPFesWLpL0chnzH2gW5Us",
+    "expire_date": "2026-05-12T17:01:38.612Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "h7rsxy4avhqtprae8xgv6242lc1xdf3y",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQRO_iGlnx2ps4lPQ5Q7Rrr3EA2VI-FeLuJFIK6Ebz3sxbjbStedwWmccpqqsyjbr8lkzhKeUg8UHlXnWoZZ0n1oeiT7rooUZ53U737yDTkve1gEOmvkEwNqFNxnmkPXsKJNCnRtgajK2AB2y7SMKdZXGYEsMO1OcL9344IQ:1wRjAH:sRvcaXyYI_xEsHvs505jsBqWVjqLvlmDlXHlZb0_YIc",
+    "expire_date": "2026-06-09T04:13:13.039Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "hr98f3l0uc0wn4cl8p6knlwfqpr6saz4",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hAoMIBL956BMMxUqqYkpV0Z765NutDtf-_9l0h5W2vaOi9pInEWUZx-N8zlwfMO6J7nW5OlzesyodwVedAur434eTncv4Oae_3WA5AOcVBBeeuKYU0Rx0CAEQGsZjaWnHU8Ui5gtAHEAJnIeqWNj4N4fwDVrzeD:1wJ7SS:4mOH_o6E1dxnXh8Sm9FukC1YdCHaXH7rzIDacdqifls",
+    "expire_date": "2026-05-16T10:20:24.043Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "hs37pnjp6jiotvsrvzgl0sw1o8tbmxyi",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHloR:ObzWpKcCfESM_ghokGaIDksQfwrT9TtFyTWR-aHn8QQ",
+    "expire_date": "2026-05-12T17:01:31.794Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "insim23j0by2p3magkd0c4ah3liu88wv",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI7lQ:Rcne7NyMQ8_gvD5jUaynHImr_Vu5PF1nnKwaWaD1b0Y",
+    "expire_date": "2026-05-13T16:27:52.284Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "jeqjf99rwukullgl8mb9siotzdy592v5",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAUBe_iGlmO15iSnjNYf7FxADlSnFSIu0OkFNC-mXkvkWBba9p6XtLE4iwGLU6_IwI9ctsJ36HdZklzW5cJ5a7Ig3Z5nTk_L4f7d1Ch129djOPA6BUqy6hcQM1FUyAMaMkaGMegBuNJ-wwZGdEFV3yJ0Sik6MT7AyJ0OL8:1wVx20:IZLuiamLpOrSENN5CAQqFvrGJE4EMmCZRfMRitM8_zo",
+    "expire_date": "2026-06-20T19:50:08.503Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "jz3h0f4rv569vmnkzcb88kbmuwbtw20r",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHvGx:ZK9FUnNLz8oPv8yobQLeNhmWxNvsjgh1vfA3Eoacgng",
+    "expire_date": "2026-05-13T03:07:35.114Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "l7n4q6li0s499ptve3aue4ji4w81lpsc",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI7Nr:_9gPM-BJflPOllPLyOp2kbXVEa04mX92NZgad7A_GYo",
+    "expire_date": "2026-05-13T16:03:31.154Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "l854sao7gz4vryxq72ghw5mcotxuzh94",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHlxa:RFsb-qWHtFSosUXeIvZth8odKsA7-gensGJRogLopfg",
+    "expire_date": "2026-05-12T17:10:58.688Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "lfa27qncz48jmtdclljvd78y2x0pwao2",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHvHF:tJ6IZl9stJv41s5kNclFciv-iCBqfsWR605T5f2cIR4",
+    "expire_date": "2026-05-13T03:07:53.025Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "lkhqeu5fwcc7r5x5k6dr4sn79edzy863",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI7lj:b3GLWM2OUUT6YMcF8xPfKrNI8tc9wOylxFsfZCOhKdM",
+    "expire_date": "2026-05-13T16:28:11.871Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "lrmy9pnpsgmozyza3t4x7cku8ja52g55",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHm0L:h4QxLMHH1rnPUlImL8ExamGfiY67mdB39F23dvByWx0",
+    "expire_date": "2026-05-12T17:13:49.380Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "nkuc8ah9cdaxc2vx1385fjdcf47yoand",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hAoMIBL956BMMxUqqYkpV0Z765NutDtf-_9l0h5W2vaOi9pInEWUZx-N8zlwfMO6J7nW5OlzesyodwVedAur434eTncv4Oae_3WA5AOcVBBeeuKYU0Rx0CAEQGsZjaWnHU8Ui5gtAHEAJnIeqWNj4N4fwDVrzeD:1wKQ8a:jE_fdShI8oJLT_MpXWD3txqV4d-jRCVUs0Z0xQ_i-Dg",
+    "expire_date": "2026-05-20T00:29:16.598Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "potdrfxes2evo8b4t4ui61tusnudrtfr",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHvMy:SyRXHjliKiJtFP6myEkpeMTGrYPdZpp6u94w-pIFAr4",
+    "expire_date": "2026-05-13T03:13:48.017Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "qn56k5gadjc1hpwzgxve61t6gtg5637a",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQRO_iGlnx2ps4lPQ5Q7Rrr3EA2VI-FeLuJFIK6Ebz3sxbjbStedwWmccpqqsyjbr8lkzhKeUg8UHlXnWoZZ0n1oeiT7rooUZ53U737yDTkve1gEOmvkEwNqFNxnmkPXsKJNCnRtgajK2AB2y7SMKdZXGYEsMO1OcL9344IQ:1wIr7K:_2TrLvhexXbdd3Lm28HFG7y3iuDasx5S-_eAH3duU5A",
+    "expire_date": "2026-05-15T16:53:30.161Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "qnaevc2x9hj2ecrfv4roq6i2sklfzlst",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI7jt:mQ1whQT34ZzS5CMnZjrtcyKg1QYyd3lTDDaJGGmsFdc",
+    "expire_date": "2026-05-13T16:26:17.147Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "t1gdtoiwm6sw76m0pglop9n4jtvyc0uc",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlkx8ZeSPmew1rtrHEC2FCcV4u4QKQW0b2beS0TY1hK3zkucSVzEWZx-twT44LoDukO9NYmtrsuc5K7Ig3Y5NeLn9XD_Dgr08q0NeI_BBQ7GO0YHAWEgUpqyHi0krwzjqGxyhrJ12jONWuGgQs42YRbvD_ISOII:1wHmbA:P9M6qsGeyKVMIvTzj8Kq98KdtjKrIrgQKQMwgHbVZyQ",
+    "expire_date": "2026-05-12T17:51:52.389Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "t5n972jptmn37g84o48jflc87dt850vp",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI6z6:sDWxyRqjzxoa3vVMzjVeG96d1vtjQ56qOXgONi6ENLQ",
+    "expire_date": "2026-05-13T15:37:56.969Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "t5pidnmvfl4hokdr9glgbk6sljzelaz1",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI7kL:vCRRKK3bxw2ZLnNJui-h4_e4FQVFEyKHmWNgvLkRLzk",
+    "expire_date": "2026-05-13T16:26:45.294Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "tvf2sjuj1sdntij0jjtvufbe1f647cuw",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hAoMIBL956BMMxUqqYkpV0Z765NutDtf-_9l0h5W2vaOi9pInEWUZx-N8zlwfMO6J7nW5OlzesyodwVedAur434eTncv4Oae_3WA5AOcVBBeeuKYU0Rx0CAEQGsZjaWnHU8Ui5gtAHEAJnIeqWNj4N4fwDVrzeD:1wJL3q:zQwBVWx9yWDyVP2XC2njULcSSscia1RTk2kNoOgZB64",
+    "expire_date": "2026-05-17T00:51:54.751Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "u054j3y32jsku7403knonyom68v32yfy",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI6lS:EQw79flE330h7K0NESCkbzKM2lUW6RhyjNCcE8OfMkg",
+    "expire_date": "2026-05-13T15:23:50.103Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ui67hd5fu7xumyo09u7fqg8hvnb0hxcw",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI7Bs:s9J4A7Nj7o7U-8m6wnlspN72-CdGYW6upow-oVPqcFw",
+    "expire_date": "2026-05-13T15:51:08.104Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "v9l58r0cvr9qa3xabg547qvawhwgqn9y",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHvAT:2fpmse2lvHroD3e9DHnS0soJbfde9xfwOo26unA7s44",
+    "expire_date": "2026-05-13T03:00:53.417Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "vbr5jeigbtg4liirtd7dzmslm9cb7lx4",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHlp3:J76iSb_cDFPukbrRyaZ0waeP8plc-LarfV2XZzF8EYs",
+    "expire_date": "2026-05-12T17:02:09.108Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "vheqsan2awcun7n9ocj4tv99fz7uzmts",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHw4J:kSRTufcZxQ5hauilGDXuk9y3J8Qy8r0rQMSEi_5y8LY",
+    "expire_date": "2026-05-13T03:58:35.141Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "w5xap0yf5r5fzbtbghxrf3rtsi6rx7wp",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hAoMIBL956BMMxUqqYkpV0Z765NutDtf-_9l0h5W2vaOi9pInEWUZx-N8zlwfMO6J7nW5OlzesyodwVedAur434eTncv4Oae_3WA5AOcVBBeeuKYU0Rx0CAEQGsZjaWnHU8Ui5gtAHEAJnIeqWNj4N4fwDVrzeD:1wIzHV:HyMEO4VTcu6MJTCDOZZyIFaGWcmxfQBbSqkZgopw0os",
+    "expire_date": "2026-05-16T01:36:33.709Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "wgoavqma5te7h6bmgi16qbhmipy3h860",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHudV:P1Ki-LgQSoN3n9LVEtmTIy4m51gFvdUcHbgHW7pbfys",
+    "expire_date": "2026-05-13T02:26:49.480Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "xiy3noknsvotfexsqr3fmhbupwpbzeev",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHkm0:7os98FFRjYHi6abiQ_FqWUdwjLyL_I0qap7QXF8nhHQ",
+    "expire_date": "2026-05-12T15:54:56.152Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "yhl742jbajudpmlec5g8hv7j2f7is2si",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHuTa:LKpvX6Lz0GtCBRd7R-FftqxDj1tLX9VsN7qSSB7T13Y",
+    "expire_date": "2026-05-13T02:16:34.266Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ypgxxgypah3yg3e937bnwb61cnavals7",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wI7X8:ssg7esxjjJZ2tlATo9-LR9RGcPiqw-L3_olJi4BucXI",
+    "expire_date": "2026-05-13T16:13:06.708Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "zav8jyh0lj8auaqpza6012tjj2mgdn2a",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wIr10:FO5H07NhCnLsRj4CMK6Yp56b0rP9J0H3UFjHhvMaoGY",
+    "expire_date": "2026-05-15T16:46:58.371Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "zcdnvtfec2mhvi2xu24gisk3no0tkf5v",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyELFAGP3v0GsmUXqRqalPZk_Hdp0oNmTjNvZt4i4raWuDVe4kTiIpQ4_WYjpifXHdAD632Waa7rMo1yr8iDNnmbiV_Xo_t3ULCVvjYEGZgceh9MIhzYQ_cQgk0uZ4c6KAq-yxptibMOXikD54QmQR7E5wvrLDe5:1wHw3R:BFEY3gA9Ziz4OGF9jbh7gEVhTynUA0w8TTOttUPcktI",
+    "expire_date": "2026-05-13T03:57:41.530Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "7a3bed1a341d9eab860c3e6c47776d4fe25e228a",
+  "fields": {
+    "user": [
+      "anderson"
+    ],
+    "created": "2026-05-19T02:07:20.010Z"
+  }
+},
+{
+  "model": "core.empresa",
+  "pk": 1,
+  "fields": {
+    "nome": "Empresa Padrao",
+    "slug": "empresa-padrao",
+    "documento": null,
+    "dominio": null,
+    "ativa": true,
+    "criado_em": "2026-06-08T15:19:11.876Z",
+    "atualizado_em": "2026-06-08T15:19:11.876Z"
+  }
+},
+{
+  "model": "core.empresausuario",
+  "pk": 1,
+  "fields": {
+    "empresa": 1,
+    "user": [
+      "anderson.proenca"
+    ],
+    "tipo_acesso": "admin",
+    "ativo": true,
+    "criado_em": "2026-06-08T15:19:11.887Z",
+    "atualizado_em": "2026-06-08T15:19:11.887Z"
+  }
+},
+{
+  "model": "core.empresausuario",
+  "pk": 2,
+  "fields": {
+    "empresa": 1,
+    "user": [
+      "kleberson"
+    ],
+    "tipo_acesso": "admin",
+    "ativo": true,
+    "criado_em": "2026-06-08T15:19:11.888Z",
+    "atualizado_em": "2026-06-08T15:19:11.888Z"
+  }
+},
+{
+  "model": "core.empresausuario",
+  "pk": 3,
+  "fields": {
+    "empresa": 1,
+    "user": [
+      "teste"
+    ],
+    "tipo_acesso": "usuario",
+    "ativo": true,
+    "criado_em": "2026-06-08T15:19:11.889Z",
+    "atualizado_em": "2026-06-08T15:19:11.889Z"
+  }
+},
+{
+  "model": "core.empresausuario",
+  "pk": 4,
+  "fields": {
+    "empresa": 1,
+    "user": [
+      "anderson"
+    ],
+    "tipo_acesso": "admin",
+    "ativo": true,
+    "criado_em": "2026-06-08T15:19:11.891Z",
+    "atualizado_em": "2026-06-08T15:19:11.891Z"
+  }
+},
+{
+  "model": "core.empresausuario",
+  "pk": 5,
+  "fields": {
+    "empresa": 1,
+    "user": [
+      "anderson.proenca1"
+    ],
+    "tipo_acesso": "admin",
+    "ativo": true,
+    "criado_em": "2026-06-08T15:19:11.892Z",
+    "atualizado_em": "2026-06-08T15:19:11.892Z"
+  }
+},
+{
+  "model": "core.departamento",
+  "pk": 1,
+  "fields": {
+    "empresa": 1,
+    "nome": "RH",
+    "descricao": "Sala",
+    "localizacao": "Sala RH",
+    "responsavel": "ROGERIO",
+    "email": "rh@notchfire",
+    "telefone": "41984120231",
+    "predio": 1,
+    "ativo": true,
+    "criado_em": "2026-04-21T23:03:00.278Z",
+    "atualizado_em": "2026-04-29T03:34:15.801Z"
+  }
+},
+{
+  "model": "core.departamento",
+  "pk": 2,
+  "fields": {
+    "empresa": 1,
+    "nome": "FINANCEIRO",
+    "descricao": "",
+    "localizacao": "FINANCEIRO",
+    "responsavel": "ROGERIO",
+    "email": "financeiro@notchfire",
+    "telefone": "41984120231",
+    "predio": 1,
+    "ativo": true,
+    "criado_em": "2026-04-22T00:11:28.346Z",
+    "atualizado_em": "2026-04-29T03:34:12.608Z"
+  }
+},
+{
+  "model": "core.grupo",
+  "pk": 1,
+  "fields": {
+    "empresa": 1,
+    "nome": "EXTINTORES",
+    "descricao": "Extintores",
+    "ativo": true,
+    "criado_em": "2026-04-21T23:03:52.682Z",
+    "atualizado_em": "2026-04-29T03:34:30.495Z"
+  }
+},
+{
+  "model": "core.grupo",
+  "pk": 3,
+  "fields": {
+    "empresa": 1,
+    "nome": "HIDRANTES",
+    "descricao": "",
+    "ativo": true,
+    "criado_em": "2026-05-02T11:01:33.833Z",
+    "atualizado_em": "2026-05-02T11:01:33.833Z"
+  }
+},
+{
+  "model": "core.predio",
+  "pk": 1,
+  "fields": {
+    "empresa": 1,
+    "nome": "C1",
+    "descricao": "Predio",
+    "endereco": "PREDIO",
+    "ativo": true,
+    "criado_em": "2026-04-21T22:27:53.431Z",
+    "atualizado_em": "2026-04-29T03:15:12.030Z"
+  }
+},
+{
+  "model": "core.tipoequipamento",
+  "pk": 2,
+  "fields": {
+    "empresa": 1,
+    "nome": "AGUA PRESSURIZADA",
+    "grupo": 1,
+    "periodicidade": 4,
+    "descricao": "",
+    "ativo": true,
+    "criado_em": "2026-04-28T02:35:12.213Z",
+    "atualizado_em": "2026-05-02T10:21:16.241Z"
+  }
+},
+{
+  "model": "core.tipoequipamento",
+  "pk": 3,
+  "fields": {
+    "empresa": 1,
+    "nome": "PÓ QUÍMICO",
+    "grupo": 1,
+    "periodicidade": 4,
+    "descricao": "",
+    "ativo": true,
+    "criado_em": "2026-05-02T10:21:59.346Z",
+    "atualizado_em": "2026-05-02T10:21:59.346Z"
+  }
+},
+{
+  "model": "core.tipoequipamento",
+  "pk": 4,
+  "fields": {
+    "empresa": 1,
+    "nome": "GAS CARBÔNICO",
+    "grupo": 1,
+    "periodicidade": 4,
+    "descricao": "",
+    "ativo": true,
+    "criado_em": "2026-05-02T11:02:19.098Z",
+    "atualizado_em": "2026-05-02T11:02:19.099Z"
+  }
+},
+{
+  "model": "core.servicotipoequipamento",
+  "pk": 2,
+  "fields": {
+    "empresa": 1,
+    "tipo_equipamento": 2,
+    "tipo_servico": 1,
+    "periodicidade": 4,
+    "obrigatorio": false,
+    "vencimento_final_mes": false,
+    "habilitar_assinatura": false,
+    "assinatura_obrigatoria": false,
+    "acoes_obrigatorias": false,
+    "permitir_servicos_massa": false,
+    "ordem": 0,
+    "ativo": true,
+    "criado_em": "2026-04-29T14:53:12.937Z"
+  }
+},
+{
+  "model": "core.secaochecklist",
+  "pk": 2,
+  "fields": {
+    "empresa": 1,
+    "servico_tipo_equipamento": 2,
+    "nome": "Checklit",
+    "descricao": "",
+    "ordem": 0,
+    "ativo": true,
+    "criado_em": "2026-04-29T15:06:35.679Z"
+  }
+},
+{
+  "model": "core.itemchecklist",
+  "pk": 2,
+  "fields": {
+    "empresa": 1,
+    "secao": 2,
+    "pergunta": "Manômetro está no indicativo verde?",
+    "tipo_resposta": "sim_nao",
+    "ordem": 0,
+    "obrigatorio": true,
+    "detalhamento": "",
+    "imagem_descritiva": "",
+    "ativo": true,
+    "criado_em": "2026-04-29T15:07:12.786Z",
+    "atualizado_em": "2026-05-02T22:52:37.583Z"
+  }
+},
+{
+  "model": "core.itemchecklist",
+  "pk": 3,
+  "fields": {
+    "empresa": 1,
+    "secao": 2,
+    "pergunta": "Equipamento está livre de danos?",
+    "tipo_resposta": "sim_nao",
+    "ordem": 0,
+    "obrigatorio": true,
+    "detalhamento": "",
+    "imagem_descritiva": "",
+    "ativo": true,
+    "criado_em": "2026-05-02T22:56:12.115Z",
+    "atualizado_em": "2026-05-02T22:56:12.115Z"
+  }
+},
+{
+  "model": "core.periodicidade",
+  "pk": 4,
+  "fields": {
+    "empresa": 1,
+    "nome": "MENSAL",
+    "por_demanda": false,
+    "valor": 1,
+    "tipo": "meses",
+    "ativo": true,
+    "criado_em": "2026-04-26T18:04:16.450Z",
+    "atualizado_em": "2026-05-02T10:25:36.736Z"
+  }
+},
+{
+  "model": "core.equipamento",
+  "pk": 1,
+  "fields": {
+    "empresa": 1,
+    "nome": "",
+    "numero_serie": "00001",
+    "marca": "Teste",
+    "data_fabricacao": "2026-04-24",
+    "tipo_equipamento": 2,
+    "grupo": 1,
+    "predio": 1,
+    "departamento": 2,
+    "local": "local",
+    "ponto_referencia": "Coluna X3",
+    "descricao": "AP 10L",
+    "observacoes": null,
+    "foto": "equipamentos/ChatGPT_Image_29_de_mar._de_2026_14_23_16.png",
+    "qr_code": "qrcodes/equipamento_1_qrcode.png",
+    "ativo": true,
+    "criado_em": "2026-04-24T01:36:52.169Z",
+    "atualizado_em": "2026-05-02T12:23:34.141Z",
+    "numero_extintor": "00001",
+    "numero_cilindro": null
+  }
+},
+{
+  "model": "core.tiposervico",
+  "pk": 1,
+  "fields": {
+    "empresa": 1,
+    "nome": "INSPEÇÃO",
+    "descricao": "",
+    "ativo": true,
+    "criado_em": "2026-04-26T16:15:51.651Z",
+    "atualizado_em": "2026-04-26T16:15:51.651Z"
+  }
+},
+{
+  "model": "core.usuarioperfil",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "anderson.proenca"
+    ],
+    "departamento": null,
+    "predio": 1,
+    "foto": "usuarios/ChatGPT_Image_29_de_mar._de_2026_14_23_16.png",
+    "tipo_acesso": "admin",
+    "sites": "C3",
+    "filtros": "",
+    "status": "ativo",
+    "observacoes": "",
+    "ultimo_acesso": null,
+    "data_criacao": "2026-04-29T03:01:56.466Z",
+    "data_atualizacao": "2026-05-01T15:53:11.012Z"
+  }
+},
+{
+  "model": "core.usuarioperfil",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "kleberson"
+    ],
+    "departamento": null,
+    "predio": 1,
+    "foto": "",
+    "tipo_acesso": "admin",
+    "sites": "C3",
+    "filtros": "",
+    "status": "ativo",
+    "observacoes": "",
+    "ultimo_acesso": null,
+    "data_criacao": "2026-05-01T15:54:21.942Z",
+    "data_atualizacao": "2026-05-01T16:44:42.004Z"
+  }
+},
+{
+  "model": "core.usuarioperfil",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "teste"
+    ],
+    "departamento": null,
+    "predio": 1,
+    "foto": "",
+    "tipo_acesso": "usuario",
+    "sites": "C3",
+    "filtros": "",
+    "status": "ativo",
+    "observacoes": "",
+    "ultimo_acesso": null,
+    "data_criacao": "2026-05-01T16:00:49.030Z",
+    "data_atualizacao": "2026-05-01T16:00:49.030Z"
+  }
+},
+{
+  "model": "core.usuarioperfil",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "anderson.proenca1"
+    ],
+    "departamento": null,
+    "predio": null,
+    "foto": "",
+    "tipo_acesso": "usuario",
+    "sites": "C3",
+    "filtros": null,
+    "status": "ativo",
+    "observacoes": null,
+    "ultimo_acesso": null,
+    "data_criacao": "2026-06-05T18:35:00.974Z",
+    "data_atualizacao": "2026-06-05T18:35:00.974Z"
+  }
+},
+{
+  "model": "core.servico",
+  "pk": 1,
+  "fields": {
+    "empresa": 1,
+    "equipamento": 1,
+    "tipo_servico": 1,
+    "data_realizacao": "2026-04-29T15:07:43.102Z",
+    "realizado_por": [
+      "anderson.proenca"
+    ],
+    "observacoes": "",
+    "status": "concluido",
+    "pontuacao_total": "1.00",
+    "pontuacao_maxima": "1.00",
+    "criado_em": "2026-04-29T15:07:43.105Z",
+    "atualizado_em": "2026-04-29T15:07:43.114Z"
+  }
+},
+{
+  "model": "core.servico",
+  "pk": 14,
+  "fields": {
+    "empresa": 1,
+    "equipamento": 1,
+    "tipo_servico": 1,
+    "data_realizacao": "2026-05-02T12:29:59.068Z",
+    "realizado_por": [
+      "kleberson"
+    ],
+    "observacoes": "",
+    "status": "concluido",
+    "pontuacao_total": "1.00",
+    "pontuacao_maxima": "2.00",
+    "criado_em": "2026-05-02T12:29:59.068Z",
+    "atualizado_em": "2026-05-02T22:57:02.294Z"
+  }
+},
+{
+  "model": "core.servico",
+  "pk": 15,
+  "fields": {
+    "empresa": 1,
+    "equipamento": 1,
+    "tipo_servico": 1,
+    "data_realizacao": "2026-05-03T03:03:12.887Z",
+    "realizado_por": [
+      "kleberson"
+    ],
+    "observacoes": "",
+    "status": "rascunho",
+    "pontuacao_total": "0.00",
+    "pontuacao_maxima": "0.00",
+    "criado_em": "2026-05-03T03:03:12.887Z",
+    "atualizado_em": "2026-05-03T03:04:05.358Z"
+  }
+},
+{
+  "model": "core.servico",
+  "pk": 16,
+  "fields": {
+    "empresa": 1,
+    "equipamento": 1,
+    "tipo_servico": 1,
+    "data_realizacao": "2026-05-06T00:49:19.386Z",
+    "realizado_por": [
+      "anderson.proenca"
+    ],
+    "observacoes": "",
+    "status": "rascunho",
+    "pontuacao_total": "0.00",
+    "pontuacao_maxima": "0.00",
+    "criado_em": "2026-05-06T00:49:19.386Z",
+    "atualizado_em": "2026-05-06T00:49:20.754Z"
+  }
+},
+{
+  "model": "core.servico",
+  "pk": 17,
+  "fields": {
+    "empresa": 1,
+    "equipamento": 1,
+    "tipo_servico": 1,
+    "data_realizacao": "2026-05-26T04:21:10.985Z",
+    "realizado_por": [
+      "anderson"
+    ],
+    "observacoes": "",
+    "status": "concluido",
+    "pontuacao_total": "2.00",
+    "pontuacao_maxima": "2.00",
+    "criado_em": "2026-05-26T04:21:10.985Z",
+    "atualizado_em": "2026-05-26T04:21:10.997Z"
+  }
+},
+{
+  "model": "core.servico",
+  "pk": 18,
+  "fields": {
+    "empresa": 1,
+    "equipamento": 1,
+    "tipo_servico": 1,
+    "data_realizacao": "2026-05-26T04:28:58.920Z",
+    "realizado_por": [
+      "anderson"
+    ],
+    "observacoes": "",
+    "status": "concluido",
+    "pontuacao_total": "0.00",
+    "pontuacao_maxima": "0.00",
+    "criado_em": "2026-05-26T04:28:58.920Z",
+    "atualizado_em": "2026-05-26T04:28:58.920Z"
+  }
+},
+{
+  "model": "core.servico",
+  "pk": 19,
+  "fields": {
+    "empresa": 1,
+    "equipamento": 1,
+    "tipo_servico": 1,
+    "data_realizacao": "2026-05-26T04:29:05.407Z",
+    "realizado_por": [
+      "anderson"
+    ],
+    "observacoes": "",
+    "status": "concluido",
+    "pontuacao_total": "0.00",
+    "pontuacao_maxima": "0.00",
+    "criado_em": "2026-05-26T04:29:05.407Z",
+    "atualizado_em": "2026-05-26T04:29:05.407Z"
+  }
+},
+{
+  "model": "core.respostachecklist",
+  "pk": 1,
+  "fields": {
+    "empresa": 1,
+    "servico": 1,
+    "item_checklist": 2,
+    "opcao": "atende",
+    "observacao": "",
+    "fotos": "",
+    "criado_em": "2026-04-29T15:07:43.110Z"
+  }
+},
+{
+  "model": "core.respostachecklist",
+  "pk": 18,
+  "fields": {
+    "empresa": 1,
+    "servico": 14,
+    "item_checklist": 2,
+    "opcao": "atende",
+    "observacao": "",
+    "fotos": "",
+    "criado_em": "2026-05-02T22:57:02.287Z"
+  }
+},
+{
+  "model": "core.respostachecklist",
+  "pk": 19,
+  "fields": {
+    "empresa": 1,
+    "servico": 14,
+    "item_checklist": 3,
+    "opcao": "nao_atende",
+    "observacao": "Está amassado na parte inferior",
+    "fotos": "",
+    "criado_em": "2026-05-02T22:57:02.291Z"
+  }
+},
+{
+  "model": "core.respostachecklist",
+  "pk": 20,
+  "fields": {
+    "empresa": 1,
+    "servico": 17,
+    "item_checklist": 2,
+    "opcao": "atende",
+    "observacao": "",
+    "fotos": "",
+    "criado_em": "2026-05-26T04:21:10.991Z"
+  }
+},
+{
+  "model": "core.respostachecklist",
+  "pk": 21,
+  "fields": {
+    "empresa": 1,
+    "servico": 17,
+    "item_checklist": 3,
+    "opcao": "atende",
+    "observacao": "",
+    "fotos": "",
+    "criado_em": "2026-05-26T04:21:10.996Z"
+  }
+},
+{
+  "model": "core.relatoriogerado",
+  "pk": 1,
+  "fields": {
+    "empresa": 1,
+    "tipo": "condensado",
+    "predio": null,
+    "tipo_equipamento": null,
+    "tipo_servico": null,
+    "equipamento": null,
+    "data_inicio": "2020-01-01",
+    "data_fim": "2030-12-31",
+    "total_servicos": 1,
+    "total_equipamentos": 1,
+    "total_nao_conformes": 0,
+    "media_pontuacao": "100.00",
+    "arquivo_nome": "relatorio_condensado_20260429_161306.pdf",
+    "criado_por": [
+      "anderson.proenca"
+    ],
+    "criado_em": "2026-04-29T16:13:06.780Z"
+  }
+},
+{
+  "model": "core.relatoriogerado",
+  "pk": 2,
+  "fields": {
+    "empresa": 1,
+    "tipo": "condensado",
+    "predio": 1,
+    "tipo_equipamento": 2,
+    "tipo_servico": 1,
+    "equipamento": null,
+    "data_inicio": "2026-04-01",
+    "data_fim": "2026-04-29",
+    "total_servicos": 1,
+    "total_equipamentos": 1,
+    "total_nao_conformes": 0,
+    "media_pontuacao": "100.00",
+    "arquivo_nome": "relatorio_condensado_20260429_161643.pdf",
+    "criado_por": [
+      "anderson.proenca"
+    ],
+    "criado_em": "2026-04-29T16:16:43.600Z"
+  }
+},
+{
+  "model": "core.relatoriogerado",
+  "pk": 3,
+  "fields": {
+    "empresa": 1,
+    "tipo": "condensado",
+    "predio": null,
+    "tipo_equipamento": null,
+    "tipo_servico": null,
+    "equipamento": null,
+    "data_inicio": null,
+    "data_fim": null,
+    "total_servicos": 1,
+    "total_equipamentos": 1,
+    "total_nao_conformes": 0,
+    "media_pontuacao": "100.00",
+    "arquivo_nome": "relatorio_condensado_20260429_162617.pdf",
+    "criado_por": [
+      "anderson.proenca"
+    ],
+    "criado_em": "2026-04-29T16:26:17.275Z"
+  }
+},
+{
+  "model": "core.relatoriogerado",
+  "pk": 4,
+  "fields": {
+    "empresa": 1,
+    "tipo": "condensado",
+    "predio": null,
+    "tipo_equipamento": null,
+    "tipo_servico": null,
+    "equipamento": 1,
+    "data_inicio": null,
+    "data_fim": null,
+    "total_servicos": 1,
+    "total_equipamentos": 1,
+    "total_nao_conformes": 0,
+    "media_pontuacao": "100.00",
+    "arquivo_nome": "relatorio_equipamento_20260429_193835.pdf",
+    "criado_por": [
+      "anderson.proenca"
+    ],
+    "criado_em": "2026-04-29T19:38:35.425Z"
+  }
+},
+{
+  "model": "core.relatoriogerado",
+  "pk": 5,
+  "fields": {
+    "empresa": 1,
+    "tipo": "condensado",
+    "predio": 1,
+    "tipo_equipamento": 2,
+    "tipo_servico": 1,
+    "equipamento": null,
+    "data_inicio": "2026-04-01",
+    "data_fim": "2026-04-29",
+    "total_servicos": 1,
+    "total_equipamentos": 1,
+    "total_nao_conformes": 0,
+    "media_pontuacao": "100.00",
+    "arquivo_nome": "relatorio_condensado_20260429_193918.pdf",
+    "criado_por": [
+      "anderson.proenca"
+    ],
+    "criado_em": "2026-04-29T19:39:18.086Z"
+  }
+},
+{
+  "model": "core.relatoriogerado",
+  "pk": 6,
+  "fields": {
+    "empresa": 1,
+    "tipo": "condensado",
+    "predio": null,
+    "tipo_equipamento": null,
+    "tipo_servico": null,
+    "equipamento": 1,
+    "data_inicio": null,
+    "data_fim": null,
+    "total_servicos": 1,
+    "total_equipamentos": 1,
+    "total_nao_conformes": 0,
+    "media_pontuacao": "100.00",
+    "arquivo_nome": "relatorio_equipamento_20260502_102405.pdf",
+    "criado_por": [
+      "kleberson"
+    ],
+    "criado_em": "2026-05-02T10:24:05.100Z"
+  }
+},
+{
+  "model": "core.relatoriogerado",
+  "pk": 7,
+  "fields": {
+    "empresa": 1,
+    "tipo": "condensado",
+    "predio": 1,
+    "tipo_equipamento": 2,
+    "tipo_servico": 1,
+    "equipamento": 1,
+    "data_inicio": "2026-04-01",
+    "data_fim": "2026-05-02",
+    "total_servicos": 2,
+    "total_equipamentos": 1,
+    "total_nao_conformes": 1,
+    "media_pontuacao": "75.00",
+    "arquivo_nome": "relatorio_equipamento_20260502_230142.pdf",
+    "criado_por": [
+      "kleberson"
+    ],
+    "criado_em": "2026-05-02T23:01:42.286Z"
+  }
+},
+{
+  "model": "core.relatoriogerado",
+  "pk": 8,
+  "fields": {
+    "empresa": 1,
+    "tipo": "condensado",
+    "predio": null,
+    "tipo_equipamento": null,
+    "tipo_servico": null,
+    "equipamento": 1,
+    "data_inicio": null,
+    "data_fim": null,
+    "total_servicos": 2,
+    "total_equipamentos": 1,
+    "total_nao_conformes": 1,
+    "media_pontuacao": "75.00",
+    "arquivo_nome": "relatorio_equipamento_20260503_030325.pdf",
+    "criado_por": [
+      "kleberson"
+    ],
+    "criado_em": "2026-05-03T03:03:25.431Z"
+  }
+}
+]

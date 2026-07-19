@@ -1,0 +1,217 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Novo Equipamento - NothFire{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/criar_equipamento.css' %}?v=20260616-2">
+{% endblock %}
+
+{% block content %}
+<div class="equip-page">
+    <div class="equip-card">
+        <div class="equip-header">
+            <div class="equip-header-icon">
+                <i class="fa-solid fa-fire-extinguisher"></i>
+            </div>
+
+            <div class="equip-header-text">
+                <h1>Cadastro de Novo Equipamento</h1>
+                <p>Preencha os dados abaixo para cadastrar um novo equipamento.</p>
+            </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="equipamentoForm" class="equip-form">
+            {% csrf_token %}
+
+            <section class="equip-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-image"></i>
+                    <span>Identificação Visual</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_foto">Foto do Equipamento</label>
+
+                    <label class="upload-area" for="id_foto">
+                        <div class="upload-content" id="photoPreview">
+                            <i class="fa-solid fa-camera"></i>
+                            <p>Clique ou arraste a foto do item aqui</p>
+                            <small>(.jpeg, .jpg, .png, .gif)</small>
+                        </div>
+                        {{ form.foto }}
+                    </label>
+                </div>
+            </section>
+
+            <section class="equip-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Localização</span>
+                </div>
+
+                <div class="form-row two-cols">
+                    <div class="form-group">
+                        <label for="id_predio">Prédio <span class="required">*</span></label>
+                        {{ form.predio }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_departamento">Departamento</label>
+                        {{ form.departamento }}
+                    </div>
+                </div>
+
+                <div class="form-row one-col">
+                    <div class="form-group">
+                        <label for="id_ponto_referencia">Ponto de Referência</label>
+                        {{ form.ponto_referencia }}
+                    </div>
+                </div>
+            </section>
+
+            <section class="equip-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <span>Detalhes do Equipamento</span>
+                </div>
+
+                <div class="form-row two-cols">
+                    <div class="form-group">
+                        <label for="id_grupo">Grupo de Equipamento <span class="required">*</span></label>
+                        {{ form.grupo }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_tipo_equipamento">Tipo de Equipamento <span class="required">*</span></label>
+                        {{ form.tipo_equipamento }}
+                    </div>
+                </div>
+
+                <div class="form-row two-cols">
+                    <div class="form-group">
+                        <label for="id_marca">Marca de Fabricação</label>
+                        {{ form.marca }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_numero_serie">Número de Série</label>
+                        {{ form.numero_serie }}
+                    </div>
+                </div>
+
+                <div class="inspection-box" id="inspectionBox" style="display: none;">
+                    <div class="inspection-header-text">
+                        <span class="inspection-subtitle">Informações de inspeção do tipo selecionado</span>
+                        <strong id="inspectionTitle">INSPEÇÃO</strong>
+                    </div>
+
+                    <div class="inspection-summary" id="inspectionSummary"></div>
+                    <div class="inspection-services" id="inspectionServices"></div>
+                </div>
+
+                <div class="expiration-box">
+                    <div class="expiration-header">
+                        <span>Vencimento do equipamento</span>
+                    </div>
+
+                    <div class="expiration-options">
+                        {% for radio in form.possui_vencimento %}
+                        <label class="expiration-option" for="{{ radio.id_for_label }}">
+                            {{ radio.tag }}
+                            <span>{{ radio.choice_label }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-row one-col expiration-fields" id="genericExpirationFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="id_data_vencimento">Data de vencimento do equipamento</label>
+                        {{ form.data_vencimento }}
+                    </div>
+                </div>
+
+                <div class="form-row two-cols expiration-fields" id="extinguisherExpirationFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="id_vencimento_carga">Data de vencimento da carga</label>
+                        {{ form.vencimento_carga }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_vencimento_teste_hidrostatico">Data de vencimento do teste hidrostático do casco</label>
+                        {{ form.vencimento_teste_hidrostatico }}
+                    </div>
+                </div>
+
+                <div class="form-row two-cols">
+                    <div class="form-group">
+                        <label for="id_data_fabricacao">Data de Fabricação</label>
+                        {{ form.data_fabricacao }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_local">Especificação do Equipamento</label>
+                        {{ form.local }}
+                    </div>
+                </div>
+            </section>
+
+            <section class="equip-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-toggle-on"></i>
+                    <span>Status</span>
+                </div>
+
+                <div class="status-box">
+                    <label class="status-toggle-switch" for="id_ativo">
+                        {{ form.ativo }}
+                        <span>Equipamento ativo</span>
+                    </label>
+                    <small class="form-text">
+                        Desmarque esta opção se o equipamento estiver desativado.
+                    </small>
+                </div>
+            </section>
+
+            <section class="equip-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <span>QR Code</span>
+                </div>
+
+                <div class="info-note">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <span>O QR Code será gerado automaticamente ao salvar o equipamento.</span>
+                </div>
+            </section>
+
+            {% if form.errors %}
+            <div class="form-errors">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <div>
+                    <strong>Corrija os campos abaixo:</strong>
+                    {{ form.errors }}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <a href="{% url 'equipamentos' %}" class="btn btn-secondary">
+                    <i class="fa-solid fa-xmark"></i>
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-check"></i>
+                    Salvar Equipamento
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/criar_equipamento.js' %}?v=20260616-2"></script>
+{% endblock %}

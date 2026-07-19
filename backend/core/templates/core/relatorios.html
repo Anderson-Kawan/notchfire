@@ -1,0 +1,154 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Relatórios - NotchFire{% endblock %}
+{% block nav_relatorios %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/relatorios.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="relatorios-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-chart-simple"></i> Relatórios</h1>
+            <p>Exporte relatórios condensados por prédio, tipo de equipamento, serviço e período</p>
+        </div>
+    </div>
+
+    <section class="report-panel">
+        <div class="report-panel-header">
+            <div>
+                <span class="eyebrow">Relatório Condensado</span>
+                <h2>Selecione os filtros</h2>
+            </div>
+            <span class="report-chip"><i class="fa-solid fa-file-pdf"></i> PDF</span>
+        </div>
+
+        <form id="relatorioForm" class="report-form">
+            <div class="form-grid">
+                <div class="select-field">
+                    <label for="predioSelect">Prédio</label>
+                    <div class="select-shell">
+                        <select id="predioSelect" required>
+                            <option value="">Selecione um prédio...</option>
+                        </select>
+                        <button type="button" class="clear-select" data-target="predioSelect" title="Limpar prédio">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <div class="select-field">
+                    <label for="tipoEquipamentoSelect">Tipo de Equipamento</label>
+                    <div class="select-shell">
+                        <select id="tipoEquipamentoSelect" required disabled>
+                            <option value="">Selecione o prédio primeiro...</option>
+                        </select>
+                        <button type="button" class="clear-select" data-target="tipoEquipamentoSelect" title="Limpar tipo de equipamento">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <div class="select-field">
+                    <label for="tipoServicoSelect">Tipo de Serviço</label>
+                    <div class="select-shell">
+                        <select id="tipoServicoSelect" required disabled>
+                            <option value="">Selecione o tipo de equipamento...</option>
+                        </select>
+                        <button type="button" class="clear-select" data-target="tipoServicoSelect" title="Limpar tipo de serviço">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <div class="select-field">
+                    <label for="equipamentoSelect">Equipamento</label>
+                    <div class="select-shell">
+                        <select id="equipamentoSelect" disabled>
+                            <option value="">Todos os equipamentos do filtro...</option>
+                        </select>
+                        <button type="button" class="clear-select" data-target="equipamentoSelect" title="Limpar equipamento">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <div class="date-row">
+                    <div class="date-field">
+                        <label for="dataInicio">De</label>
+                        <div class="date-shell">
+                            <input type="date" id="dataInicio" required>
+                            <i class="fa-solid fa-calendar-day"></i>
+                        </div>
+                    </div>
+                    <div class="date-field">
+                        <label for="dataFim">Até</label>
+                        <div class="date-shell">
+                            <input type="date" id="dataFim" required>
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-summary" id="reportSummary">
+                <div class="summary-card">
+                    <span>Serviços</span>
+                    <strong id="summaryServicos">0</strong>
+                </div>
+                <div class="summary-card">
+                    <span>Equipamentos</span>
+                    <strong id="summaryEquipamentos">0</strong>
+                </div>
+                <div class="summary-card">
+                    <span>Não conformes</span>
+                    <strong id="summaryNaoConformes">0</strong>
+                </div>
+                <div class="summary-card">
+                    <span>Pontuação média</span>
+                    <strong id="summaryPontuacao">0%</strong>
+                </div>
+            </div>
+
+            <div id="recentResults" class="recent-results"></div>
+
+            <div class="report-actions">
+                <button type="button" class="btn btn-outline" id="limparRelatorio">
+                    <i class="fa-solid fa-eraser"></i> Limpar
+                </button>
+                <button type="submit" class="btn btn-primary" id="exportarRelatorio">
+                    <i class="fa-solid fa-file-export"></i> Exportar relatório
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <section class="history-panel">
+        <div class="history-header">
+            <div>
+                <span class="eyebrow">Histórico</span>
+                <h2>Relatórios antigos</h2>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" id="atualizarHistorico">
+                <i class="fa-solid fa-rotate"></i> Atualizar
+            </button>
+        </div>
+        <div id="historicoRelatorios" class="history-list">
+            <div class="recent-empty">
+                <span><i class="fa-solid fa-spinner fa-spin"></i> Carregando relatórios...</span>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/relatorios.js' %}"></script>
+{% endblock %}

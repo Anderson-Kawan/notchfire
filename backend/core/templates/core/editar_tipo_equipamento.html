@@ -1,0 +1,591 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Editor - {{ tipo_equipamento.nome }}{% endblock %}
+{% block nav_tipos_equipamentos %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/editor_tipo_equipamento.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="editor-page">
+
+  <!-- PAGE HEADER -->
+  <div class="editor-header">
+    <div class="editor-header-left">
+      <a href="{% url 'tipos_equipamento' %}" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+      <div>
+        <h1 class="editor-title">
+          <i class="fa-solid fa-microchip"></i>
+          {{ tipo_equipamento.nome }}
+        </h1>
+        <p class="editor-subtitle">
+          {{ tipo_equipamento.grupo.nome }}
+          {% if tipo_equipamento.periodicidade %}&middot; {{ tipo_equipamento.periodicidade.get_rotulo_inspecao }}{% endif %}
+        </p>
+      </div>
+    </div>
+    <div class="editor-header-right">
+      <button class="btn btn-outline" onclick="openModal('editInfoModal')">
+        <i class="fa-solid fa-pen"></i> Editar informações
+      </button>
+      <button class="btn btn-danger-outline" onclick="excluirTipoEquipamento()">
+        <i class="fa-solid fa-trash"></i> Excluir
+      </button>
+    </div>
+  </div>
+
+  <div class="editor-summary">
+    <div class="summary-card">
+      <span class="summary-label">Checklists</span>
+      <strong>{{ total_servicos_configurados }}</strong>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label">Obrigatórios</span>
+      <strong>{{ servicos_obrigatorios }}</strong>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label">Seções</span>
+      <strong>{{ total_secoes_checklist }}</strong>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label">Perguntas</span>
+      <strong>{{ total_itens_checklist }}</strong>
+    </div>
+  </div>
+
+  <!-- TWO COLUMN LAYOUT -->
+  <div class="editor-layout">
+
+    <!-- LEFT PANEL -->
+    <div class="editor-left">
+
+      <!-- INFO CARD (read-only display) -->
+      <div class="panel-card">
+        <div class="panel-card-header">
+          <span><i class="fa-solid fa-info-circle"></i> Perfil do tipo</span>
+        </div>
+        <div class="panel-card-body">
+          <div class="info-field">
+            <span class="info-key">Tipo de Equipamento</span>
+            <span class="info-val" id="displayNome">{{ tipo_equipamento.nome }}</span>
+          </div>
+          <div class="info-field">
+            <span class="info-key">Grupo</span>
+            <span class="info-val" id="displayGrupo">{{ tipo_equipamento.grupo.nome }}</span>
+          </div>
+          <div class="info-field">
+            <span class="info-key">Periodicidade padrão</span>
+            <span class="info-val" id="displayPeriodicidade">{{ tipo_equipamento.periodicidade.nome|default:"Nenhuma" }}</span>
+          </div>
+          <div class="info-field">
+            <span class="info-key">Descrição</span>
+            <span class="info-val" id="displayDescricao">{{ tipo_equipamento.descricao|default:"Nenhuma descrição" }}</span>
+          </div>
+          <div class="info-field">
+            <span class="info-key">Status</span>
+            <span class="status-badge {% if tipo_equipamento.ativo %}status-active{% else %}status-inactive{% endif %}">
+              {% if tipo_equipamento.ativo %}Ativo{% else %}Inativo{% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATTACHMENTS -->
+      <div class="panel-card" style="margin-top: 20px;">
+        <div class="panel-card-header">
+          <span><i class="fa-solid fa-paperclip"></i> Anexos do Tipo de Equipamento</span>
+          <button class="btn btn-sm btn-primary" onclick="abrirModalAdicionarAnexo()">
+            <i class="fa-solid fa-plus"></i> Adicionar
+          </button>
+        </div>
+        <div class="panel-card-body">
+          <div class="empty-attachments">
+            <i class="fa-solid fa-folder-open"></i>
+            <p>Nenhum anexo adicionado</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="editor-right">
+      <div class="panel-card">
+        <div class="panel-card-header">
+          <span><i class="fa-solid fa-list-check"></i> Checklists configurados</span>
+          <div class="panel-actions">
+            <button class="btn btn-sm btn-outline" title="Copiar configuração">
+              <i class="fa-solid fa-copy"></i>
+            </button>
+            <button class="btn btn-sm btn-primary" onclick="abrirModalNovoServico()">
+              <i class="fa-solid fa-plus"></i> Novo Checklist
+            </button>
+          </div>
+        </div>
+        <div class="panel-card-body">
+          <div class="service-toolbar">
+            <div class="service-search">
+              <i class="fa-solid fa-search"></i>
+              <input type="text" id="servicoSearch" placeholder="Buscar checklist, periodicidade ou tag...">
+            </div>
+          </div>
+          <div id="servicosList" class="servicos-list">
+
+            {% for servico in servicos %}
+            <div class="servico-row"
+                 data-id="{{ servico.id }}"
+                 data-search="{{ servico.tipo_servico.nome }} {{ servico.periodicidade.nome|default:'' }} {% if servico.obrigatorio %}obrigatorio{% endif %} {% if servico.habilitar_assinatura %}assinatura{% endif %}"
+                 onclick="abrirModalServico({{ servico.id }})">
+              <div class="servico-row-left">
+                <div class="servico-row-name">{{ servico.tipo_servico.nome }}</div>
+                <div class="servico-row-periodicidade">
+                  <i class="fa-solid fa-calendar-days"></i>
+                  {% if servico.periodicidade %}{{ servico.periodicidade.get_rotulo_inspecao }}{% else %}Sem periodicidade{% endif %}
+                </div>
+                <div class="servico-row-meta">
+                  {% if servico.obrigatorio %}<span class="meta-tag">Obrigatório</span>{% endif %}
+                  {% if servico.habilitar_assinatura %}<span class="meta-tag">Assinatura</span>{% endif %}
+                  {% if servico.acoes_obrigatorias %}<span class="meta-tag">Ações obrigatórias</span>{% endif %}
+                  {% if servico.permitir_servicos_massa %}<span class="meta-tag">Em massa</span>{% endif %}
+                </div>
+              </div>
+              <div class="servico-row-right">
+                <span class="checklist-pill" onclick="event.stopPropagation();abrirModalServico({{ servico.id }})">
+                  <i class="fa-solid fa-layer-group"></i> {{ servico.secoes_count }}
+                </span>
+                <span class="checklist-pill" onclick="event.stopPropagation();abrirModalServico({{ servico.id }})">
+                  <i class="fa-solid fa-list-check"></i> {{ servico.checklist_total_itens }}
+                </span>
+                <button class="icon-btn" onclick="event.stopPropagation();editarServico({{ servico.id }})" title="Editar">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="icon-btn icon-btn-danger" onclick="event.stopPropagation();excluirServico({{ servico.id }})" title="Excluir">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+                <i class="fa-solid fa-chevron-right servico-arrow"></i>
+              </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+              <i class="fa-solid fa-toolbox"></i>
+              <h3>Nenhum checklist configurado</h3>
+              <p>Este tipo ainda não possui checklists vinculados.</p>
+              <button class="btn btn-sm btn-primary" onclick="abrirModalNovoServico()">
+                <i class="fa-solid fa-plus"></i> Adicionar primeiro checklist
+              </button>
+            </div>
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ======================================================= -->
+<!-- MODAL: EDITAR INFORMAÇÕES -->
+<!-- ======================================================= -->
+<div id="editInfoModal" class="modal-overlay">
+  <div class="modal-box modal-sm">
+    <div class="modal-header">
+      <h2 class="modal-title"><i class="fa-solid fa-pen"></i> Editar Informações</h2>
+      <button class="modal-close" onclick="closeModal('editInfoModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Tipo de Equipamento *</label>
+        <input type="text" id="editNome" class="form-control" value="{{ tipo_equipamento.nome }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Grupo *</label>
+        <select id="editGrupo" class="form-control">
+          <option value="">Selecione um grupo...</option>
+          {% for grupo in grupos %}
+            <option value="{{ grupo.id }}" {% if tipo_equipamento.grupo.id == grupo.id %}selected{% endif %}>{{ grupo.nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Periodicidade padrão</label>
+        <select id="editPeriodicidade" class="form-control">
+          <option value="">Selecione...</option>
+          {% for p in periodicidades %}
+            <option value="{{ p.id }}" {% if tipo_equipamento.periodicidade and tipo_equipamento.periodicidade.id == p.id %}selected{% endif %}>{{ p.nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descrição</label>
+        <textarea id="editDescricao" class="form-control" rows="3">{{ tipo_equipamento.descricao }}</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select id="editStatus" class="form-control">
+          <option value="true" {% if tipo_equipamento.ativo %}selected{% endif %}>Ativo</option>
+          <option value="false" {% if not tipo_equipamento.ativo %}selected{% endif %}>Inativo</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('editInfoModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarTipoEquipamentoInfo()">
+        <i class="fa-solid fa-save"></i> Salvar
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ======================================================= -->
+<!-- MODAL: CHECKLIST (visualizar + editar seções e perguntas) -->
+<!-- ======================================================= -->
+<div id="servicoModal" class="modal-overlay">
+  <div class="modal-box modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-title" id="servicoModalTitle"><i class="fa-solid fa-list-check"></i> Checklist</h2>
+      <div class="modal-actions">
+        <button class="btn btn-sm btn-danger-outline" id="btnDesabilitarServico">
+          <i class="fa-solid fa-ban"></i> Desabilitar
+        </button>
+        <button class="icon-btn icon-btn-danger" id="btnExcluirServico" title="Excluir checklist">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+        <button class="icon-btn" id="btnEditarCamposServico" onclick="toggleServicoEditMode()" title="Editar campos">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button class="modal-close" onclick="closeModal('servicoModal')">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body">
+
+      <!-- CAMPOS READONLY -->
+      <div id="servicoCamposView">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Checklist</label>
+            <div class="form-control-static" id="viewTipoServico">—</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Periodicidade</label>
+            <div class="form-control-static" id="viewPeriodicidade">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAMPOS EDITÁVEIS -->
+      <div id="servicoCamposEdit" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Checklist *</label>
+            <select id="modalTipoServico" class="form-control">
+              <option value="">Selecione...</option>
+              {% for tipo in tipos_servico %}
+              <option value="{{ tipo.id }}">{{ tipo.nome }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Periodicidade *</label>
+            <select id="modalPeriodicidade" class="form-control">
+              <option value="">Selecione...</option>
+              {% for p in periodicidades %}
+              <option value="{{ p.id }}">{{ p.nome }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-modal-summary">
+        <div class="service-stat">
+          <span>Seções</span>
+          <strong id="modalTotalSecoes">0</strong>
+        </div>
+        <div class="service-stat">
+          <span>Perguntas</span>
+          <strong id="modalTotalPerguntas">0</strong>
+        </div>
+        <div class="service-stat">
+          <span>Status</span>
+          <strong id="modalStatusServico">Ativo</strong>
+        </div>
+      </div>
+
+      <!-- TOGGLES -->
+      <div class="toggle-group">
+        <div class="toggle-row">
+          <span class="toggle-label">Checklist é obrigatório?</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="modalObrigatorio">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Vencimento no final do mês</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="modalVencimentoFinalMes">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Habilitar Assinatura</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="modalHabilitarAssinatura" onchange="toggleAssinaturaOpcoes()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div id="modalAssinaturaOpcoes" style="display:none;padding-left:24px;">
+          <div class="toggle-row">
+            <span class="toggle-label" style="font-size:13px;color:var(--texto-suave);">Assinatura obrigatória</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="modalAssinaturaObrigatoria">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Ações obrigatórias para resposta "Não Atende"?</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="modalAcoesObrigatorias">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Permitir checklists em massa</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="modalPermitirMassa">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- CHECKLIST -->
+      <div class="checklist-area">
+        <div class="checklist-area-header">
+          <span class="checklist-area-title"><i class="fa-solid fa-clipboard-list"></i> Checklist</span>
+          <div class="checklist-actions">
+            <button class="btn btn-sm btn-outline" onclick="abrirModalCriarSecao()">
+              <i class="fa-solid fa-folder-plus"></i> Criar Seção
+            </button>
+            <button class="btn btn-sm btn-danger-outline" onclick="apagarChecklist()">
+              <i class="fa-solid fa-trash"></i> Apagar Checklist
+            </button>
+          </div>
+        </div>
+
+        <div id="checklistContent">
+          <!-- Seções e itens são renderizados aqui via JS -->
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('servicoModal')">Fechar</button>
+      <button class="btn btn-primary" id="btnSalvarServico" onclick="salvarServicoModal()">
+        <i class="fa-solid fa-save"></i> Salvar Checklist
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ======================================================= -->
+<!-- MODAL: CRIAR/EDITAR SEÇÃO -->
+<!-- ======================================================= -->
+<div id="secaoModal" class="modal-overlay">
+  <div class="modal-box modal-sm">
+    <div class="modal-header">
+      <h2 class="modal-title" id="secaoModalTitle"><i class="fa-solid fa-folder-plus"></i> Nova Seção</h2>
+      <button class="modal-close" onclick="closeModal('secaoModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="secaoId">
+      <input type="hidden" id="secaoServicoId">
+      <div class="form-group">
+        <label class="form-label">Nome da Seção *</label>
+        <input type="text" id="secaoNome" class="form-control" placeholder="Ex: ITENS DE VERIFICAÇÃO">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descrição</label>
+        <textarea id="secaoDescricao" class="form-control" rows="3" placeholder="Descrição opcional..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('secaoModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarSecao()">
+        <i class="fa-solid fa-save"></i> Salvar Seção
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ======================================================= -->
+<!-- MODAL: CRIAR/EDITAR PERGUNTA -->
+<!-- ======================================================= -->
+<div id="itemModal" class="modal-overlay">
+  <div class="modal-box modal-lg">
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-title" id="itemModalTitle"><i class="fa-solid fa-circle-question"></i> Nova Pergunta</h2>
+        <p id="itemModalSubtitle" style="font-size:12px;color:var(--texto-suave);margin-top:3px;">Seção: —</p>
+      </div>
+      <button class="modal-close" onclick="closeModal('itemModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="itemId">
+      <input type="hidden" id="itemServicoId">
+
+      <div class="form-group">
+        <label class="form-label">Seção *</label>
+        <select id="itemSeccao" class="form-control" onchange="atualizarSubtitleSecao()">
+          <option value="">Selecione uma seção...</option>
+          {% for servico in servicos %}
+            {% for secao in servico.secoes_checklist.all %}
+              <option value="{{ secao.id }}">{{ servico.tipo_servico.nome }} — {{ secao.nome }}</option>
+            {% endfor %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Pergunta *</label>
+        <textarea id="itemPergunta" class="form-control" rows="3" placeholder="Ex: Pressurização (manômetro) está no indicativo verde?"></textarea>
+      </div>
+
+      <div class="question-preview-card">
+        <div class="question-preview-head">
+          <span><i class="fa-solid fa-eye"></i> Prévia no checklist</span>
+          <strong id="itemPreviewObrigatorio">Obrigatória</strong>
+        </div>
+        <div class="service-check-item preview">
+          <div class="service-check-main">
+            <p id="itemPreviewPergunta">1 - A pergunta aparecerá aqui</p>
+            <div id="itemPreviewResposta" class="service-answer-options"></div>
+          </div>
+          <button type="button" class="service-action-preview" disabled>Adicionar ação</button>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="tabDetalhamento" onclick="switchTab(this)">
+          <i class="fa-solid fa-align-left"></i> Detalhamento
+        </button>
+        <button class="tab-btn" data-tab="tabImagem" onclick="switchTab(this)">
+          <i class="fa-solid fa-image"></i> Imagem Descritiva
+        </button>
+        <button class="tab-btn" data-tab="tabOpcoes" onclick="switchTab(this)">
+          <i class="fa-solid fa-sliders"></i> Outras Opções
+        </button>
+      </div>
+
+      <div class="tab-panel active" id="tabDetalhamento">
+        <div class="form-group" style="margin-top:14px;">
+          <label class="form-label">Detalhamento da Pergunta</label>
+          <div class="rich-toolbar">
+            <button class="rich-btn" onclick="execCmd('undo')" title="Desfazer"><i class="fa-solid fa-rotate-left"></i></button>
+            <button class="rich-btn" onclick="execCmd('redo')" title="Refazer"><i class="fa-solid fa-rotate-right"></i></button>
+            <span class="rich-sep"></span>
+            <button class="rich-btn" onclick="execCmd('bold')" title="Negrito"><b>B</b></button>
+            <button class="rich-btn" onclick="execCmd('italic')" title="Itálico"><i>I</i></button>
+            <button class="rich-btn" onclick="execCmd('underline')" title="Sublinhado"><u>U</u></button>
+            <button class="rich-btn" onclick="execCmd('strikeThrough')" title="Tachado"><s>S</s></button>
+            <span class="rich-sep"></span>
+            <button class="rich-btn" onclick="execCmd('justifyLeft')" title="Esquerda"><i class="fa-solid fa-align-left"></i></button>
+            <button class="rich-btn" onclick="execCmd('justifyCenter')" title="Centro"><i class="fa-solid fa-align-center"></i></button>
+            <button class="rich-btn" onclick="execCmd('insertUnorderedList')" title="Lista"><i class="fa-solid fa-list-ul"></i></button>
+            <button class="rich-btn" onclick="execCmd('insertOrderedList')" title="Lista numerada"><i class="fa-solid fa-list-ol"></i></button>
+          </div>
+          <div id="itemDetalhamento" class="rich-editor" contenteditable="true"></div>
+          <small class="form-hint">Objetivo deste campo é ajudar o executor a responder esta pergunta da maneira correta</small>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tabImagem">
+        <div class="img-upload-area" style="margin-top:14px;">
+          <i class="fa-solid fa-image"></i>
+          <p>Clique para selecionar uma imagem descritiva</p>
+          <small>PNG, JPG até 5MB</small>
+          <input type="file" accept="image/*" style="display:none;" id="imgUploadInput">
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tabOpcoes">
+        <div class="form-row" style="margin-top:14px;">
+          <div class="form-group">
+            <label class="form-label">Tipo de Resposta</label>
+            <select id="itemTipoResposta" class="form-control">
+              <option value="sim_nao">Atende / Não atende / Não se aplica</option>
+              <option value="texto">Texto</option>
+              <option value="numero">Número</option>
+              <option value="data">Data</option>
+              <option value="foto">Foto</option>
+            </select>
+            <small class="form-hint">No checklist, a opção padrão aparece como Atende, Não atende ou Não se aplica.</small>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ordem</label>
+            <input type="number" id="itemOrdem" class="form-control" value="0" min="0">
+          </div>
+        </div>
+        <div class="toggle-group">
+          <div class="toggle-row">
+            <span class="toggle-label">Pergunta obrigatória</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="itemObrigatorio" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('itemModal')">
+        <i class="fa-solid fa-times"></i> Cancelar
+      </button>
+      <button class="btn btn-primary" onclick="salvarItem()">
+        <i class="fa-solid fa-save"></i> Salvar Pergunta
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- MODAL: CONFIRMAÇÃO -->
+<!-- ======================================================= -->
+<div id="confirmModal" class="modal-overlay">
+  <div class="modal-box modal-sm">
+    <div class="modal-header">
+      <h2 class="modal-title" id="confirmTitle"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar ação</h2>
+      <button class="modal-close" onclick="resolverConfirmacao(false)">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="confirm-text" id="confirmMessage">Tem certeza?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="resolverConfirmacao(false)">Cancelar</button>
+      <button class="btn btn-danger-outline" id="confirmActionBtn" onclick="resolverConfirmacao(true)">
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const TIPO_EQUIPAMENTO_ID = {{ tipo_equipamento.id }};
+  const CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+<script src="{% static 'core/js/editor_tipo_equipamento.js' %}?v=20260616-checklist-flow"></script>
+{% endblock %}

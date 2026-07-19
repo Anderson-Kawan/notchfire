@@ -1,0 +1,13 @@
+asgiref==3.11.1
+click==8.4.1
+Django==6.0.3
+djangorestframework==3.17.1
+gunicorn==26.0.0
+h11==0.16.0
+packaging==26.2
+pillow==12.1.1
+psycopg[binary]==3.3.4
+qrcode==8.2
+sqlparse==0.5.5
+uvicorn==0.49.0
+whitenoise==6.12.0

@@ -1,0 +1,123 @@
+name: notchfire
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: notchfire-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:?Defina POSTGRES_DB no .env}"
+      POSTGRES_USER: "${POSTGRES_USER:?Defina POSTGRES_USER no .env}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    logging: *default-logging
+
+  django:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: notchfire-django:latest
+    container_name: notchfire-django
+    restart: unless-stopped
+    environment:
+      DJANGO_SETTINGS_MODULE: notchfire_project.settings
+      DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:?Defina DJANGO_SECRET_KEY no .env}"
+      DJANGO_DEBUG: "${DJANGO_DEBUG:-False}"
+      DJANGO_ALLOWED_HOSTS: "${DJANGO_ALLOWED_HOSTS:?Defina DJANGO_ALLOWED_HOSTS no .env}"
+      DJANGO_CSRF_TRUSTED_ORIGINS: "${DJANGO_CSRF_TRUSTED_ORIGINS:-}"
+      SITE_URL: "${SITE_URL:-http://localhost}"
+      TENANT_BASE_DOMAINS: "${TENANT_BASE_DOMAINS:-}"
+      TENANT_RESERVED_SUBDOMAINS: "${TENANT_RESERVED_SUBDOMAINS:-www,app,api,admin,static,media}"
+      DB_ENGINE: postgresql
+      DB_CONN_MAX_AGE: "${DB_CONN_MAX_AGE:-60}"
+      DATABASE_URL: "${DATABASE_URL:-}"
+      POSTGRES_DB: "${POSTGRES_DB:?Defina POSTGRES_DB no .env}"
+      POSTGRES_USER: "${POSTGRES_USER:?Defina POSTGRES_USER no .env}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env}"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      DJANGO_USE_X_FORWARDED_HOST: "${DJANGO_USE_X_FORWARDED_HOST:-True}"
+      DJANGO_USE_X_FORWARDED_PORT: "${DJANGO_USE_X_FORWARDED_PORT:-True}"
+      DJANGO_SECURE_PROXY_SSL_HEADER: "${DJANGO_SECURE_PROXY_SSL_HEADER:-True}"
+      DJANGO_SECURE_SSL_REDIRECT: "${DJANGO_SECURE_SSL_REDIRECT:-False}"
+      DJANGO_SESSION_COOKIE_SECURE: "${DJANGO_SESSION_COOKIE_SECURE:-False}"
+      DJANGO_CSRF_COOKIE_SECURE: "${DJANGO_CSRF_COOKIE_SECURE:-False}"
+      DJANGO_SECURE_HSTS_SECONDS: "${DJANGO_SECURE_HSTS_SECONDS:-0}"
+      DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS: "${DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS:-False}"
+      DJANGO_SECURE_HSTS_PRELOAD: "${DJANGO_SECURE_HSTS_PRELOAD:-False}"
+      DJANGO_STATIC_URL: "${DJANGO_STATIC_URL:-/static/}"
+      DJANGO_MEDIA_URL: "${DJANGO_MEDIA_URL:-/media/}"
+      DJANGO_STATIC_ROOT: /app/staticfiles
+      DJANGO_MEDIA_ROOT: /app/media
+      DJANGO_LOG_DIR: /app/logs
+      DJANGO_LOG_LEVEL: "${DJANGO_LOG_LEVEL:-INFO}"
+      GUNICORN_WORKERS: "${GUNICORN_WORKERS:-3}"
+      GUNICORN_THREADS: "${GUNICORN_THREADS:-2}"
+      GUNICORN_TIMEOUT: "${GUNICORN_TIMEOUT:-60}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - static_data:/app/staticfiles
+      - media_data:/app/media
+      - django_logs:/app/logs
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz/', timeout=5).read()\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging: *default-logging
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: notchfire-nginx
+    restart: unless-stopped
+    depends_on:
+      django:
+        condition: service_healthy
+    ports:
+      - "${NGINX_HTTP_PORT:-80}:80"
+      # Futuro HTTPS direto neste Nginx:
+      # - "${NGINX_HTTPS_PORT:-443}:443"
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - static_data:/var/www/notchfire/static:ro
+      - media_data:/var/www/notchfire/media:ro
+      - nginx_logs:/var/log/nginx
+      # Futuro HTTPS com certificados locais:
+      # - ./docker/nginx/certs:/etc/nginx/certs:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1/healthz/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    logging: *default-logging
+
+volumes:
+  postgres_data:
+    name: notchfire_postgres_data
+  static_data:
+    name: notchfire_static_data
+  media_data:
+    name: notchfire_media_data
+  django_logs:
+    name: notchfire_django_logs
+  nginx_logs:
+    name: notchfire_nginx_logs

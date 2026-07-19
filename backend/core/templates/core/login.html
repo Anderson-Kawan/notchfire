@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'core/css/login.css' %}">
+</head>
+<body>
+
+    <div class="background" style="background-image: url('{% static 'core/img/bg.png' %}')"></div>
+
+    <div class="login-container">
+        <div class="login-box">
+
+            <img src="{% static 'core/img/logo.png' %}" alt="Logo" class="logo">
+
+            <h2><span class="notch">NOTCH</span><span class="fire">FIRE</span></h2>
+            <p class="subtitle">a escolha inteligente contra combate o incêndio</p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="input-group">
+                    <input type="text" name="username" placeholder="Usuário" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" name="password" placeholder="Senha" required>
+                </div>
+
+                <button type="submit">Entrar</button>
+            </form>
+
+            {% if erro %}
+                <p style="color:red; margin-top:10px;">{{ erro }}</p>
+            {% endif %}
+
+        </div>
+    </div>
+
+</body>
+</html>

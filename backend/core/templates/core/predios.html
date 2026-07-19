@@ -1,0 +1,280 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}NothFire - Prédios{% endblock %}
+{% block nav_predios %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/predios.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="predios-container">
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-building"></i> Prédios</h1>
+            <p>Gerencie os prédios e locais da empresa</p>
+        </div>
+
+        <div class="header-right">
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <button type="button" class="btn btn-primary" onclick="abrirModalCriar()">
+                <i class="fa-solid fa-plus"></i> Novo Prédio
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="predio-summary">
+        <div class="summary-card">
+            <span class="summary-label">Prédios</span>
+            <strong id="summaryTotal">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Ativos</span>
+            <strong id="summaryAtivos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Inativos</span>
+            <strong id="summaryInativos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Departamentos</span>
+            <strong id="summaryDepartamentos">0</strong>
+        </div>
+    </div>
+
+    <div class="list-controls">
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search"></i>
+                <input
+                    type="text"
+                    id="searchPredio"
+                    class="search-input"
+                    placeholder="Pesquisar por prédio, endereço ou descrição..."
+                >
+                <button type="button" id="clearSearch" class="clear-search" style="display: none;" title="Limpar busca">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-circle"></i>
+                <select id="filtroStatus" class="filter-select">
+                    <option value="">Todos os status</option>
+                    <option value="ativo">Ativos</option>
+                    <option value="inativo">Inativos</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="predios-table" id="prediosTable">
+            <thead>
+                <tr>
+                    <th class="col-nome">
+                        Prédio
+                        <i class="fa-solid fa-arrow-up sort-icon" data-sort="asc"></i>
+                    </th>
+                    <th class="col-endereco">Endereço</th>
+                    <th class="col-descricao">Descrição</th>
+                    <th class="col-departamentos">Departamentos</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-data">Criado em</th>
+                    <th class="col-actions">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="prediosTableBody">
+                <!-- Preenchido via JavaScript -->
+            </tbody>
+        </table>
+
+        <div id="loading" class="loading" style="display: none;">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Carregando prédios...</p>
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <i class="fa-solid fa-folder-open"></i>
+            <p>Nenhum prédio encontrado</p>
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalCriar()">
+                Criar primeiro prédio
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="pagination-container" id="pagination">
+        <div class="rows-per-page">
+            <label for="rowsPerPage">Linhas por página:</label>
+            <select id="rowsPerPage">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+
+        <div class="pagination-controls" id="paginationControls">
+            <!-- Paginação via JavaScript -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal Criar/Editar Prédio -->
+<div id="predioModal" class="modal">
+    <div class="modal-content modal-large">
+        <form id="predioForm">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">
+                    <i class="fa-solid fa-plus"></i> Novo Prédio
+                </h2>
+                <button type="button" class="modal-close close" title="Fechar">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="predioId" name="predioId">
+
+                <div class="form-group">
+                    <label for="nome" class="form-label">Nome do Prédio *</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        class="form-control"
+                        placeholder="Ex: Prédio C3, Prédio Administrativo"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="endereco" class="form-label">Endereço</label>
+                    <input
+                        type="text"
+                        id="endereco"
+                        name="endereco"
+                        class="form-control"
+                        placeholder="Endereço completo do prédio"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <textarea
+                        id="descricao"
+                        name="descricao"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Descrição do prédio..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="form-label">Status</label>
+                    <select id="status" name="status" class="form-control">
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+
+                <div id="formFeedback" class="form-feedback" role="alert"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-save"></i> Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Visualizar Departamentos -->
+<div id="viewDepartamentosModal" class="modal">
+    <div class="modal-content modal-large drilldown-modal">
+        <div class="modal-header drilldown-header">
+            <div class="drilldown-title">
+                <span class="drilldown-icon"><i class="fa-solid fa-building"></i></span>
+                <div>
+                    <span class="modal-kicker">Prédio</span>
+                    <h2 id="viewPredioNome" class="modal-title">Departamentos</h2>
+                </div>
+            </div>
+            <div class="drilldown-summary">
+                <span><strong id="viewDepartamentosCount">0</strong> departamentos</span>
+                <span><strong id="viewEquipamentosCount">0</strong> equipamentos</span>
+            </div>
+            <button type="button" class="modal-close close-view" title="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="modal-body drilldown-body">
+            <div class="predio-drilldown">
+                <div class="drilldown-panel">
+                    <div class="drilldown-panel-header">
+                        <h3>Departamentos</h3>
+                    </div>
+                    <div id="viewDepartamentosList" class="departamentos-list">
+                        <!-- Preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <div class="drilldown-panel equipamentos-panel">
+                    <div class="drilldown-panel-header">
+                        <h3 id="viewDepartamentoNome">Equipamentos</h3>
+                    </div>
+                    <div id="viewEquipamentosList" class="equipamentos-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" onclick="fecharModalView()">
+                <i class="fa-solid fa-xmark"></i> Fechar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Excluir Prédio -->
+<div id="excluirModal" class="modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h2><i class="fa-solid fa-trash"></i> Excluir Prédio</h2>
+            <button type="button" class="modal-close close" title="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <p>Tem certeza que deseja excluir o prédio <strong id="excluirNome"></strong>?</p>
+
+            <p class="text-warning">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+                Esta ação não poderá ser desfeita.
+            </p>
+
+            <div class="form-actions">
+                <button type="button" onclick="confirmarExcluir()" class="btn btn-danger">
+                    Excluir
+                </button>
+
+                <button type="button" class="btn btn-secondary" onclick="fecharModalExcluir()">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/predios.js' %}?v=20260618-navegacao-predios-modal"></script>
+{% endblock %}

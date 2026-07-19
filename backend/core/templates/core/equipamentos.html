@@ -1,0 +1,133 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Equipamentos - NothFire{% endblock %}
+{% block nav_equipamentos %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/equipamentos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="equipamentos-container">
+    <!-- Cabeçalho da Página -->
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-fire-extinguisher"></i> Gestão dos Equipamentos</h1>
+            <p>Gerencie todos os equipamentos do sistema</p>
+        </div>
+        <div class="header-right">
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <a href="{% url 'criar_equipamento' %}" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> Novo Equipamento
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="equip-summary">
+        <div class="summary-card">
+            <span class="summary-label">Equipamentos</span>
+            <strong id="summaryTotal">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Ativos</span>
+            <strong id="summaryAtivos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Inativos</span>
+            <strong id="summaryInativos">0</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">Tipos</span>
+            <strong id="summaryTipos">0</strong>
+        </div>
+    </div>
+
+    <!-- Barra de Pesquisa -->
+    <div class="list-controls">
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" 
+                       id="searchEquipamento" 
+                       class="search-input" 
+                       placeholder="Pesquisar por nome, série, prédio ou marca...">
+                <button id="clearSearch" class="clear-search" style="display: none;" title="Limpar busca">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="filter-bar">
+            <div class="filter-wrapper">
+                <i class="fa-solid fa-circle"></i>
+                <select id="filtroStatus" class="filter-select">
+                    <option value="">Todos os Status</option>
+                    <option value="ativo">Ativos</option>
+                    <option value="inativo">Inativos</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de Equipamentos -->
+    <div class="table-container">
+        <table class="equipamentos-table" id="equipamentosTable">
+            <thead>
+                <tr>
+                    <th class="col-foto">Foto</th>
+                    <th class="col-equipamento">
+                        Equipamento
+                        <i class="fa-solid fa-arrow-up sort-icon" data-sort="asc"></i>
+                    </th>
+                    <th class="col-tipo">Tipo</th>
+                    <th class="col-grupo">Grupo</th>
+                    <th class="col-local">Prédio</th>
+                    <th class="col-qrcode">QR Code</th>
+                    <th class="col-actions">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="equipamentosTableBody">
+                <!-- Os dados serão preenchidos via JavaScript -->
+            </tbody>
+        </table>
+
+        <!-- Loading -->
+        <div id="loading" class="loading" style="display: none;">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Carregando equipamentos...</p>
+        </div>
+
+        <!-- Nenhum resultado -->
+        <div id="noResults" class="no-results" style="display: none;">
+            <i class="fa-solid fa-folder-open"></i>
+            <p>Nenhum equipamento encontrado</p>
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <a href="{% url 'criar_equipamento' %}" class="btn btn-primary btn-sm">
+                Criar primeiro equipamento
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Paginação -->
+    <div class="pagination-container" id="pagination">
+        <div class="rows-per-page">
+            <label>Linhas por página:</label>
+            <select id="rowsPerPage">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <div class="pagination-controls" id="paginationControls">
+            <!-- Paginação será preenchida via JavaScript -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/equipamentos.js' %}"></script>
+{% endblock %}
